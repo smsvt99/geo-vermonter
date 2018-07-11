@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Geo-Vermonter</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
+    <script src="border.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+        crossorigin=""></script>
+</head>
+<style>
+    #map {
+        height: 400px;
+        width: 300px;
+    }
+
+    #countyDropdown {
+        display: none;
+    }
+</style>
+
+<body>
+    <nav id="nav"></nav>
+    <div id="mapWrapper">
+        <div id="map"></div>
+    </div>
+    <div id="latitude">Latitude: ?</div>
+    <div id="longitude">Longitude: ?</div>
+    <div id="county">
+        <p>County: ?</p>
+        <div id="countyDropdown">
+            <p>What County are we in?</p>
+            <a href="#countyInput" onclick="fillCounty('Addison County')">
+                <div id="Addison">Addison County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Bennington County')">
+                <div>Bennington County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Caledonia County')">
+                <div>Caledonia County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Chittenden County')">
+                <div>Chittenden County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Essex County')">
+                <div>Essex County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Franklin County')">
+                <div>Franklin County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Grand Isle County')">
+                <div>Grand Isle County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Lamoille County')">
+                <div>Lamoille County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Orange County')">
+                <div>Orange County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Orleans County')">
+                <div>Orleans County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Rutland County')">
+                <div>Rutland County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Washington County')">
+                <div>Washington County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Windham County')">
+                <div>Windham County</div>
+            </a>
+            <a href="#countyInput" onclick="fillCounty('Windsor County')">
+                <div>Windsor County</div>
+            </a>
+            <input id="countyInput" type="text"> 
+            <button onclick="countyGuess()">Guess</button>
+            <button>Cancel</button>
+        </div>
+    </div>
+    <div id="town">Town: ?</div>
+    </div>
+    <div id="score">?</div>
+    <button id="start" onclick="startGame()">Start a Game</button>
+    <button id="guess" onclick="guess()">Guess the Spot</button>
+    <button id="quit" onclick="quit()">I Give Up!</button>
+</body>
+<script>
+
+    let test = document.getElementById("countyDropdown")
+    console.log(test)
+
+    let randomLat;
+    let randomLong;
+    let randomPair;
+    let randomPairArray = [43.7886, -72.7317]
+    let zoomLevel = 7;
+    let realCounty;
+
+    let map = L.map('map').setView(randomPairArray, zoomLevel);
+    mapLink =
+        '<a href="http://www.esri.com/">Esri</a>';
+    wholink =
+        'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+    L.tileLayer(
+        'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; ' + mapLink + ', ' + wholink,
+            maxZoom: zoomLevel,
+            minZoom: zoomLevel,
+        }).addTo(map);
+    map.dragging.disable();
+
+    function randomCoords() {
+
+        randomLat = Math.random() * (2.267) + 42.7395;
+        randomLong = Math.random() * (-1.8165) - 71.5489;
+        randomPair = randomLat + "," + randomLong
+        randomPairArray = [randomLat, randomLong]
+
+        let layer = L.geoJson(border_data);
+        let results = leafletPip.pointInLayer([randomLong, randomLat], layer);
+
+        if (!results.length){
+            console.log("getting new number")
+            randomCoords();
+        }
+        else {console.log("point in polygon")}
+        // if randomPair 
+    }
+
+    function startGame() {
+        zoomLevel = 18;
+        randomCoords();
+        document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
+
+        let map = L.map('map').setView(randomPairArray, zoomLevel);
+        mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; ' + mapLink + ', ' + wholink,
+                maxZoom: zoomLevel,
+                minZoom: zoomLevel,
+            }).addTo(map);
+        map.dragging.disable();
+
+        document.getElementById("start").disabled = true;
+        document.getElementById("start").disabled = false;
+        document.getElementById("start").disabled = false;
+
+        document.getElementById("longitude").textContent = "Longitude: ?"
+        // document.getElementById("county").textContent = "County: ?"
+        document.getElementById("town").textContent = "Town: ?"
+        document.getElementById("latitude").textContent = "Latitude: ?"
+    }
+    function guess() {
+        //  let countyDropdown = document.getElementById("countyDropdown");
+        test.style = "display: flex; flex-direction: column;"
+    }
+    function quit() {
+        document.getElementById("longitude").textContent = "Longitude: " + randomLong;
+        document.getElementById("county").textContent = "?"
+        document.getElementById("town").textContent = "?"
+        document.getElementById("latitude").textContent = "Latitude: " + randomLat;
+    }
+    let coords = border_data.geometry.coordinates[0]
+
+    let fixedCoords = coords.map((elem) => {
+
+        let newArray = [elem[1], elem[0]]
+
+        return newArray
+    })
+
+    let polygon = L.polygon([
+        fixedCoords
+    ], { color: 'red' }).addTo(map);
+
+    function fillCounty(county){
+        document.getElementById("countyInput").value = county.toString();
+    }
+
+    function countyGuess(){
+        string = "https://nominatim.openstreetmap.org/search.php?q="+randomPair+"&format=json"
+        console.log(string)
+        fetch("https://nominatim.openstreetmap.org/search.php?q="+randomPair+"&format=json")
+        .then(function (response) {
+                            
+                            return response.json();
+                        })
+                        .then(function (myJSON) {
+                            console.log({myJSON})
+                            realCounty = myJSON[0].display_name
+
+                                if (realCounty.includes(document.getElementById("countyInput").value)) {
+                                    document.getElementById("county").textContent =  "County: " + document.getElementById("countyInput").value
+                                    console.log("winner!")
+                                }
+                                else {
+                                    console.log("wrong guess")
+                                }
+
+                        })
+    }
+</script>
+
+</html>
