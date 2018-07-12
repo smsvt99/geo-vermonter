@@ -69,6 +69,15 @@
         background-color: lightblue
     }
 
+    #countyGuessButton:disabled {
+        color: grey;
+        background-color: black;
+    }
+    #countyCancelButton:disabled {
+        color: grey;
+        background-color: black;
+    }
+
     #start {
         background-color: green;
     }
@@ -415,13 +424,16 @@
                 }
                 else {
                     score--
-                    checkScore();
-                    scoreDiv = document.getElementById("score")
-                    scoreDiv.remove()
-                    document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
-                    wrongGuessAlert = document.getElementById("alert")
-                    wrongGuessAlert.style = "display: inline-block;"
-                    wrongGuessAlert.innerHTML = "Wrong guess, guess again! <button onclick='closeAlert()' id='guessAgain'>Guess Again</button>"
+                    if (score === 0) {
+                        checkScore()
+                    } else {
+                        scoreDiv = document.getElementById("score")
+                        scoreDiv.remove()
+                        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+                        wrongGuessAlert = document.getElementById("alert")
+                        wrongGuessAlert.style = "display: inline-block;"
+                        wrongGuessAlert.innerHTML = "Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Guess Again</button>"
+                    }
                 }
             })
     }
@@ -436,9 +448,9 @@
         for (i = 0; i < countyArray.length; i++) {
             countyDropdown.innerHTML += `<a class='dropDownItems' href='#countyInput' onclick='fillCounty("${countyArray[i]}")'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
         }
-        countyDropdown.innerHTML += "<input id='countyInput' type='text'>"
-        countyDropdown.innerHTML += "<button onclick='countyGuess()'>Guess</button>"
-        countyDropdown.innerHTML += "<button onclick='cancel()'>Cancel</button>"
+        countyDropdown.innerHTML += "<input id='countyInput' readonly />"
+        countyDropdown.innerHTML += "<button id='countyGuessButton' onclick='countyGuess()'>Guess</button>"
+        countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Cancel</button>"
     }
     function north() {
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
@@ -582,9 +594,9 @@
     }
     function checkScore() {
         if (score === 0) {
-            checkScore = document.getElementById("alert")
-            checkScore.style = "display: inline-block;"
-            checkScore.innerHTML = "You lose! <br> Your score has reached 0.<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
+            checkAlert = document.getElementById("alert")
+            checkAlert.style = "display: inline-block;"
+            checkAlert.innerHTML = "You lose! <br> Your score has reached 0.<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
             document.getElementById("guess").disabled = true;
             document.getElementById("quit").disabled = true;
             document.getElementById("north").disabled = true;
@@ -593,6 +605,8 @@
             document.getElementById("west").disabled = true;
             document.getElementById("zoomOut").disabled = true;
             document.getElementById("start").disabled = false;
+            document.getElementById("countyGuessButton").disabled = true;
+            document.getElementById("countyCancelButton").disabled = true;
         }
     }
 </script>
