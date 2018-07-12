@@ -2,6 +2,8 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+        crossorigin="anonymous">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Geo-Vermonter</title>
@@ -15,94 +17,230 @@
         crossorigin=""></script>
 </head>
 <style>
-    #map {
-        height: 400px;
+    span {
+        font-size: 23px;
+    }
+
+    h1 {
+        position: absolute;
+        top: 5px;
+        left: 500px;
+        color: forestgreen;
+    }
+
+    #countyDropdown button {
+        margin: 1px;
+        padding: 1px;
+        background-color: forestgreen;
+        margin-right: 30px;
+        color: white;
+    }
+
+    #countyInput {
+        margin-right: 30px;
+        text-align: center;
+    }
+
+    .dropDownItems {
+        border: 1px black solid;
+        width: 200px;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .dropDownItems:hover {
+        background-color: lightblue;
+        color: white;
+        text-decoration: none;
+    }
+
+    #nav button:disabled {
+        color: grey;
+        background-color: black;
+    }
+
+    #controls button:disabled {
+        color: grey;
+        background-color: black;
+    }
+
+    body {
+        background-color: lightblue
+    }
+
+    #start {
+        background-color: green;
+    }
+
+    #guess {
+        background-color: blue;
+    }
+
+    #quit {
+        background-color: orangered;
+    }
+
+    body {
+        font-size: 20px;
+    }
+
+    #controls button {
+        width: 120px;
+        font-size: 20px;
+        color: white;
+    }
+
+    #controls {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        height: 100px;
+        top: 300px;
+        left: 155px;
+    }
+
+    #infoWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+        border: solid black 2px;
         width: 300px;
+        padding: 25px;
+        position: relative;
+        top: 75px;
+    }
+
+    #nav button {
+        height: 50px;
+        width: 75px;
+        font-size: 14px;
+        background-color: forestgreen;
+        color: white;
+    }
+
+    #map {
+        height: 500px;
+        width: 600px;
+        float: left;
+        z-index: 0;
+        margin-left: 85px;
+        margin-top: 75px;
     }
 
     #countyDropdown {
         display: none;
     }
+
+    #alert {
+        display: none;
+        background-color: orangered;
+        position: relative;
+        top: 110px;
+        right: 407px;
+        z-index: 1;
+        padding: 10px;
+        color: white;
+        border: solid 2px black;
+    }
+
+    #score {
+        text-align: center;
+    }
+
+    #north {
+        position: absolute;
+        left: 350px;
+        top: 30px;
+    }
+
+    #south {
+        position: absolute;
+        left: 350px;
+        top: 585px;
+    }
+
+    #east {
+        position: absolute;
+        top: 300px;
+        left: 700px;
+    }
+
+    #west {
+        position: absolute;
+        top: 300px;
+    }
+
+    #county {
+        text-align: center;
+    }
+
+    #zoomOut {
+        position: absolute;
+        top: 85px;
+        left: 100px;
+        z-index: 2;
+        background-color: white;
+    }
 </style>
 
 <body>
-    <nav id="nav"></nav>
+    <h1>Geo-Vermonter</h1>
+    <nav id="nav">
+        <button id="north" onclick="north()">
+            <i class="fas fa-chevron-circle-up"></i>
+            <br>North</button>
+        <button id="west" onclick="west()">
+            <i class="fas fa-chevron-circle-left"></i> West</button>
+        <button id="east" onclick="east()">East
+            <i class="fas fa-chevron-circle-right"></i>
+        </button>
+        <button id="south" onclick="south()">South
+            <br>
+            <i class="fas fa-chevron-circle-down"></i>
+        </button>
+        <button id="zoomOut" onclick="zoomOut()">Zoom Out</button>
+    </nav>
     <div id="mapWrapper">
         <div id="map"></div>
     </div>
-    <div id="latitude">Latitude: ?</div>
-    <div id="longitude">Longitude: ?</div>
-    <div id="county">
-        <p>County: ?</p>
-        <div id="countyDropdown">
-            <p>What County are we in?</p>
-            <a href="#countyInput" onclick="fillCounty('Addison County')">
-                <div id="Addison">Addison County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Bennington County')">
-                <div>Bennington County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Caledonia County')">
-                <div>Caledonia County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Chittenden County')">
-                <div>Chittenden County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Essex County')">
-                <div>Essex County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Franklin County')">
-                <div>Franklin County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Grand Isle County')">
-                <div>Grand Isle County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Lamoille County')">
-                <div>Lamoille County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Orange County')">
-                <div>Orange County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Orleans County')">
-                <div>Orleans County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Rutland County')">
-                <div>Rutland County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Washington County')">
-                <div>Washington County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Windham County')">
-                <div>Windham County</div>
-            </a>
-            <a href="#countyInput" onclick="fillCounty('Windsor County')">
-                <div>Windsor County</div>
-            </a>
-            <input id="countyInput" type="text"> 
-            <button onclick="countyGuess()">Guess</button>
-            <button>Cancel</button>
-        </div>
+    <div id="infoWrapper">
+        <div id="latitude">Latitude: ?</div>
+        <div id="longitude">Longitude: ?</div>
+        <div id="county">County: ?</div>
+        <div id="score">Score: ?</div>
     </div>
-    <div id="town">Town: ?</div>
+    <div id="controls">
+        <button id="start" onclick="startGame()">Start a Game</button>
+        <button id="guess" onclick="guess()">Guess the Spot</button>
+        <button id="quit" onclick="quit()">I Give Up!</button>
     </div>
-    <div id="score">?</div>
-    <button id="start" onclick="startGame()">Start a Game</button>
-    <button id="guess" onclick="guess()">Guess the Spot</button>
-    <button id="quit" onclick="quit()">I Give Up!</button>
+    <div id="alert"></div>
 </body>
 <script>
-
-    let test = document.getElementById("countyDropdown")
-    console.log(test)
-
+    let countyDropdown = document.getElementById("countyDropdown")
     let randomLat;
     let randomLong;
     let randomPair;
     let randomPairArray = [43.7886, -72.7317]
     let zoomLevel = 7;
     let realCounty;
-
-    let map = L.map('map').setView(randomPairArray, zoomLevel);
+    let layer;
+    let results;
+    let wrongGuessAlert;
+    let score;
+    let newLat;
+    let newLong
+    let scoreDiv = document.getElementById("score")
+    let countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", " Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
+    document.getElementById("guess").disabled = true;
+    document.getElementById("quit").disabled = true;
+    document.getElementById("zoomOut").disabled = true;
+    document.getElementById("north").disabled = true;
+    document.getElementById("south").disabled = true;
+    document.getElementById("east").disabled = true;
+    document.getElementById("west").disabled = true;
+    let map = L.map('map', { zoomControl: false }).setView(randomPairArray, zoomLevel);
     mapLink =
         '<a href="http://www.esri.com/">Esri</a>';
     wholink =
@@ -114,31 +252,19 @@
             minZoom: zoomLevel,
         }).addTo(map);
     map.dragging.disable();
-
-    function randomCoords() {
-
-        randomLat = Math.random() * (2.267) + 42.7395;
-        randomLong = Math.random() * (-1.8165) - 71.5489;
-        randomPair = randomLat + "," + randomLong
-        randomPairArray = [randomLat, randomLong]
-
-        let layer = L.geoJson(border_data);
-        let results = leafletPip.pointInLayer([randomLong, randomLat], layer);
-
-        if (!results.length){
-            console.log("getting new number")
-            randomCoords();
+    function zoomOut() {
+        if (zoomLevel > 16) {
+            zoomLevel--;
+        } else {
+            document.getElementById("zoomOut").disabled = true;
         }
-        else {console.log("point in polygon")}
-        // if randomPair 
-    }
-
-    function startGame() {
-        zoomLevel = 18;
-        randomCoords();
+        score--;
+        checkScore();
+        scoreDiv = document.getElementById("score")
+        scoreDiv.remove()
+        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
-
-        let map = L.map('map').setView(randomPairArray, zoomLevel);
+        let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
         mapLink =
             '<a href="http://www.esri.com/">Esri</a>';
         wholink =
@@ -149,65 +275,284 @@
                 maxZoom: zoomLevel,
                 minZoom: zoomLevel,
             }).addTo(map);
-        map.dragging.disable();
-
+        function addMapMarker(mapLat, mapLon) {
+            markerID = L.marker([mapLat, mapLon]).addTo(map);
+        }
+        addMapMarker(randomLat, randomLong)
+    }
+    function randomCoords() {
+        randomLat = Math.random() * (2.267) + 42.7395;
+        randomLong = Math.random() * (-1.8165) - 71.5489;
+        newLat = randomLat;
+        newLong = randomLong;
+        randomPair = randomLat + "," + randomLong
+        randomPairArray = [randomLat, randomLong]
+        layer = L.geoJson(border_data);
+        results = leafletPip.pointInLayer([randomLong, randomLat], layer);
+        if (!results.length) {
+            console.log("getting new number")
+            randomCoords();
+        }
+        else {
+            console.log("point in polygon")
+        }
+    }
+    function startGame() {
+        document.getElementById("north").disabled = false;
+        document.getElementById("south").disabled = false;
+        document.getElementById("east").disabled = false;
+        document.getElementById("west").disabled = false;
+        document.getElementById("zoomOut").disabled = false;
+        zoomLevel = 18;
+        score = 20;
+        randomCoords();
+        document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
+        let map = L.map('map', { zoomControl: false }).setView(randomPairArray, zoomLevel);
+        mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; ' + mapLink + ', ' + wholink,
+                maxZoom: zoomLevel,
+                minZoom: 17,
+            }).addTo(map);
+        // map.dragging.disable();
+        function addMapMarker(mapLat, mapLon) {
+            markerID = L.marker([mapLat, mapLon]).addTo(map);
+        }
+        addMapMarker(randomLat, randomLong)
         document.getElementById("start").disabled = true;
-        document.getElementById("start").disabled = false;
-        document.getElementById("start").disabled = false;
-
+        document.getElementById("guess").disabled = false;
+        document.getElementById("quit").disabled = false;
         document.getElementById("longitude").textContent = "Longitude: ?"
-        // document.getElementById("county").textContent = "County: ?"
-        document.getElementById("town").textContent = "Town: ?"
+        document.getElementById("county").innerHTML = "County: ?<div id='countyDropdown'></div>"
         document.getElementById("latitude").textContent = "Latitude: ?"
+        scoreDiv = document.getElementById("score")
+        scoreDiv.remove()
+        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+        closeAlert()
     }
     function guess() {
         //  let countyDropdown = document.getElementById("countyDropdown");
-        test.style = "display: flex; flex-direction: column;"
+        countyDropdown = document.getElementById("countyDropdown")
+        countyDropdown.style = "display: flex; flex-direction: column; position:absolute; top:-50px; right:370px; height: 385px; flex-wrap: wrap; background-color:white; width:500px;"
+        addDropdown()
+    }
+    function cancel() {
+        countyDropdown = document.getElementById("countyDropdown")
+        countyDropdown.innerHTML = "";
+        countyDropdown.style = "display:none;"
     }
     function quit() {
         document.getElementById("longitude").textContent = "Longitude: " + randomLong;
         document.getElementById("county").textContent = "?"
-        document.getElementById("town").textContent = "?"
         document.getElementById("latitude").textContent = "Latitude: " + randomLat;
+        document.getElementById("guess").disabled = true;
+        document.getElementById("quit").disabled = true;
+        document.getElementById("start").disabled = false;
+        document.getElementById("north").disabled = true;
+        document.getElementById("south").disabled = true;
+        document.getElementById("east").disabled = true;
+        document.getElementById("west").disabled = true;
+        document.getElementById("zoomOut").disabled = true;
+        checkForCounty();
     }
     let coords = border_data.geometry.coordinates[0]
-
     let fixedCoords = coords.map((elem) => {
-
         let newArray = [elem[1], elem[0]]
-
         return newArray
     })
-
     let polygon = L.polygon([
         fixedCoords
-    ], { color: 'red' }).addTo(map);
-
-    function fillCounty(county){
+    ], { color: 'red', fillColor: 'white' }).addTo(map);
+    function fillCounty(county) {
         document.getElementById("countyInput").value = county.toString();
     }
-
-    function countyGuess(){
-        string = "https://nominatim.openstreetmap.org/search.php?q="+randomPair+"&format=json"
-        console.log(string)
-        fetch("https://nominatim.openstreetmap.org/search.php?q="+randomPair+"&format=json")
-        .then(function (response) {
-                            
-                            return response.json();
-                        })
-                        .then(function (myJSON) {
-                            console.log({myJSON})
-                            realCounty = myJSON[0].display_name
-
-                                if (realCounty.includes(document.getElementById("countyInput").value)) {
-                                    document.getElementById("county").textContent =  "County: " + document.getElementById("countyInput").value
-                                    console.log("winner!")
-                                }
-                                else {
-                                    console.log("wrong guess")
-                                }
-
-                        })
+    function countyGuess() {
+        fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJSON) {
+                realCounty = myJSON[0].display_name
+                if (realCounty.includes(document.getElementById("countyInput").value)) {
+                    document.getElementById("county").innerHTML = "County: " + document.getElementById("countyInput").value + "<div id='countyDropdown'></div>"
+                    rightGuessAlert = document.getElementById("alert")
+                    rightGuessAlert.style = "display: inline-block;"
+                    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
+                    document.getElementById("latitude").textContent = "Latitude: " + randomLat;
+                    document.getElementById("longitude").textContent = "Longitude: " + randomLong;
+                    document.getElementById("start").disabled = false;
+                    document.getElementById("guess").disabled = true;
+                    document.getElementById("quit").disabled = true;
+                    document.getElementById("north").disabled = true;
+                    document.getElementById("south").disabled = true;
+                    document.getElementById("east").disabled = true;
+                    document.getElementById("west").disabled = true;
+                    document.getElementById("zoomOut").disabled = true;
+                }
+                else {
+                    score--
+                    checkScore();
+                    scoreDiv = document.getElementById("score")
+                    scoreDiv.remove()
+                    document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+                    wrongGuessAlert = document.getElementById("alert")
+                    wrongGuessAlert.style = "display: inline-block;"
+                    wrongGuessAlert.innerHTML = "Wrong guess, guess again! <button onclick='closeAlert()' id='guessAgain'>Guess Again</button>"
+                }
+            })
+    }
+    function closeAlert() {
+        wrongGuessAlert = document.getElementById("alert")
+        wrongGuessAlert.style = "display: none;"
+    }
+    function addDropdown() {
+        countyDropdown = document.getElementById("countyDropdown")
+        countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
+        countyDropdown.innerHTML += "<span>What County are we in?</span>"
+        for (i = 0; i < countyArray.length; i++) {
+            countyDropdown.innerHTML += `<a class='dropDownItems' href='#countyInput' onclick='fillCounty("${countyArray[i]}")'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
+        }
+        countyDropdown.innerHTML += "<input id='countyInput' type='text'>"
+        countyDropdown.innerHTML += "<button onclick='countyGuess()'>Guess</button>"
+        countyDropdown.innerHTML += "<button onclick='cancel()'>Cancel</button>"
+    }
+    function north() {
+        document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
+        newLat = newLat + .001;
+        let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
+        mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; ' + mapLink + ', ' + wholink,
+                maxZoom: zoomLevel,
+                minZoom: 1,
+            }).addTo(map);
+        function addMapMarker(mapLat, mapLon) {
+            markerID = L.marker([mapLat, mapLon]).addTo(map);
+        }
+        addMapMarker(randomLat, randomLong)
+        score--
+        checkScore();
+        scoreDiv = document.getElementById("score")
+        scoreDiv.remove()
+        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+    }
+    function south() {
+        document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
+        newLat = newLat - .001;
+        let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
+        mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; ' + mapLink + ', ' + wholink,
+                maxZoom: zoomLevel,
+                minZoom: 1,
+            }).addTo(map);
+        map.dragging.disable();
+        function addMapMarker(mapLat, mapLon) {
+            markerID = L.marker([mapLat, mapLon]).addTo(map);
+        }
+        addMapMarker(randomLat, randomLong)
+        score--
+        checkScore();
+        scoreDiv = document.getElementById("score")
+        scoreDiv.remove()
+        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+    }
+    function east() {
+        document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
+        newLong = newLong + .002;
+        let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
+        mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; ' + mapLink + ', ' + wholink,
+                maxZoom: zoomLevel,
+                minZoom: 1,
+            }).addTo(map);
+        map.dragging.disable();
+        function addMapMarker(mapLat, mapLon) {
+            markerID = L.marker([mapLat, mapLon]).addTo(map);
+        }
+        addMapMarker(randomLat, randomLong)
+        score--
+        checkScore();
+        scoreDiv = document.getElementById("score")
+        scoreDiv.remove()
+        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+    }
+    function west() {
+        document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
+        newLong = newLong - .002;
+        let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
+        mapLink =
+            '<a href="http://www.esri.com/">Esri</a>';
+        wholink =
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; ' + mapLink + ', ' + wholink,
+                maxZoom: zoomLevel,
+                minZoom: 1,
+            }).addTo(map);
+        map.dragging.disable();
+        function addMapMarker(mapLat, mapLon) {
+            markerID = L.marker([mapLat, mapLon]).addTo(map);
+        }
+        addMapMarker(randomLat, randomLong)
+        score--
+        checkScore();
+        scoreDiv = document.getElementById("score")
+        scoreDiv.remove()
+        document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+    }
+    function checkForCounty() {
+        countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
+        countyArrayIndex = 0
+        fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJSON) {
+                realCounty = myJSON[0].display_name
+                for (i = 0; i < countyArray.length; i++) {
+                    if (realCounty.includes(countyArray[countyArrayIndex])) {
+                        console.log("Found it")
+                        document.getElementById("county").innerHTML = "County: " + countyArray[countyArrayIndex]
+                    } else {
+                        console.log(countyArray[countyArrayIndex])
+                    }
+                    countyArrayIndex++
+                }
+            })
+    }
+    function checkScore() {
+        if (score === 0) {
+            checkScore = document.getElementById("alert")
+            checkScore.style = "display: inline-block;"
+            checkScore.innerHTML = "You lose! <br> Your score has reached 0.<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
+            document.getElementById("guess").disabled = true;
+            document.getElementById("quit").disabled = true;
+            document.getElementById("north").disabled = true;
+            document.getElementById("south").disabled = true;
+            document.getElementById("east").disabled = true;
+            document.getElementById("west").disabled = true;
+            document.getElementById("zoomOut").disabled = true;
+            document.getElementById("start").disabled = false;
+        }
     }
 </script>
 
