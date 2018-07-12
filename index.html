@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
     <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
     <script src="border.js"></script>
+    <script src="V_county_polygons.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
         crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
@@ -252,6 +253,11 @@
             minZoom: zoomLevel,
         }).addTo(map);
     map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
     function zoomOut() {
         if (zoomLevel > 16) {
             zoomLevel--;
@@ -275,6 +281,12 @@
                 maxZoom: zoomLevel,
                 minZoom: zoomLevel,
             }).addTo(map);
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
         function addMapMarker(mapLat, mapLon) {
             markerID = L.marker([mapLat, mapLon]).addTo(map);
         }
@@ -318,7 +330,12 @@
                 maxZoom: zoomLevel,
                 minZoom: 17,
             }).addTo(map);
-        // map.dragging.disable();
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
         function addMapMarker(mapLat, mapLon) {
             markerID = L.marker([mapLat, mapLon]).addTo(map);
         }
@@ -367,6 +384,9 @@
     let polygon = L.polygon([
         fixedCoords
     ], { color: 'red', fillColor: 'white' }).addTo(map);
+
+    let countyPolygon = L.geoJSON(county_data, { color: 'red' }).addTo(map)
+
     function fillCounty(county) {
         document.getElementById("countyInput").value = county.toString();
     }
@@ -422,7 +442,7 @@
     }
     function north() {
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
-        newLat = newLat + .001;
+        newLat = newLat + .002;
         let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
         mapLink =
             '<a href="http://www.esri.com/">Esri</a>';
@@ -434,6 +454,12 @@
                 maxZoom: zoomLevel,
                 minZoom: 1,
             }).addTo(map);
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
         function addMapMarker(mapLat, mapLon) {
             markerID = L.marker([mapLat, mapLon]).addTo(map);
         }
@@ -446,7 +472,7 @@
     }
     function south() {
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
-        newLat = newLat - .001;
+        newLat = newLat - .002;
         let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
         mapLink =
             '<a href="http://www.esri.com/">Esri</a>';
@@ -459,6 +485,11 @@
                 minZoom: 1,
             }).addTo(map);
         map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
         function addMapMarker(mapLat, mapLon) {
             markerID = L.marker([mapLat, mapLon]).addTo(map);
         }
@@ -471,7 +502,7 @@
     }
     function east() {
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
-        newLong = newLong + .002;
+        newLong = newLong + .004;
         let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
         mapLink =
             '<a href="http://www.esri.com/">Esri</a>';
@@ -484,6 +515,11 @@
                 minZoom: 1,
             }).addTo(map);
         map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
         function addMapMarker(mapLat, mapLon) {
             markerID = L.marker([mapLat, mapLon]).addTo(map);
         }
@@ -496,7 +532,7 @@
     }
     function west() {
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
-        newLong = newLong - .002;
+        newLong = newLong - .004;
         let map = L.map('map', { zoomControl: false }).setView([newLat, newLong], zoomLevel);
         mapLink =
             '<a href="http://www.esri.com/">Esri</a>';
@@ -509,6 +545,11 @@
                 minZoom: 1,
             }).addTo(map);
         map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
         function addMapMarker(mapLat, mapLon) {
             markerID = L.marker([mapLat, mapLon]).addTo(map);
         }
