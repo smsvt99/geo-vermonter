@@ -81,8 +81,8 @@
     L.tileLayer(
         'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: '&copy; ' + mapLink + ', ' + wholink,
-            maxZoom: zoomLevel,
-            minZoom: zoomLevel,
+            maxZoom: 18,
+            minZoom: 1,
         }).addTo(map);
     map.dragging.disable();
     map.touchZoom.disable();
