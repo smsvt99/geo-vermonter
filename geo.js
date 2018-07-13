@@ -147,7 +147,7 @@ function quit() {
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")
-    countyDropdown.style = "display: flex; flex-direction: column; position:absolute; top:-50px; right:370px; height: 385px; flex-wrap: wrap; background-color:white; width:500px;"
+    countyDropdown.style = "border: 2px solid black; display: flex; flex-direction: column; position:absolute; top:-50px; right:370px; height: 345px; flex-wrap: wrap; background-color:white; width:450px;"
     addDropdown()
 }
 function cancel() {
