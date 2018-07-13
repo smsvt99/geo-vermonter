@@ -5,7 +5,7 @@ span {
 h1 {
     position: absolute;
     top: 5px;
-    left: 500px;
+    left: 680px;
     color: forestgreen;
 }
 
@@ -15,6 +15,9 @@ h1 {
     background-color: forestgreen;
     margin-right: 30px;
     color: white;
+    align-self:center;
+    width: 215px;
+    height: 25px;
 }
 
 #countyInput {
@@ -86,8 +89,9 @@ body {
     flex-direction: row;
     position: relative;
     height: 100px;
-    top: 300px;
-    left: 155px;
+    top: 120px;
+    left: 180px;
+    z-index: 3;
 }
 
 #infoWrapper {
@@ -100,6 +104,16 @@ body {
     padding: 25px;
     position: relative;
     top: 75px;
+}
+
+#nav {
+    position: relative;
+    top:180px;
+    left:650px;
+    background-color: white;
+    border: 1px solid black;
+    height:170px;
+    width:280px;
 }
 
 #nav button {
@@ -115,8 +129,8 @@ body {
     width: 600px;
     float: left;
     z-index: 0;
-    margin-left: 85px;
-    margin-top: 75px;
+    margin-left: 20px;
+    margin-top: 20px;
 }
 
 #countyDropdown {
@@ -127,12 +141,13 @@ body {
     display: none;
     background-color: orangered;
     position: relative;
-    top: 135px;
-    right: 250px;
+    top: 10px;
+    right: 290px;
     z-index: 1;
     padding: 10px;
     color: white;
     border: solid 2px black;
+    z-index: 4;
 }
 
 #score {
@@ -140,36 +155,42 @@ body {
 }
 
 #north {
-    position: absolute;
-    left: 350px;
-    top: 30px;
+    position: relative;
+    bottom: 290px;
+    left: 100px;
 }
 
 #south {
-    position: absolute;
-    left: 350px;
-    top: 585px;
+    position: relative;
+    bottom: 280px;
+    left: 100px;
 }
 
 #east {
-    position: absolute;
-    top: 300px;
-    left: 700px;
+    position: relative;
+    bottom: 260px;
+    left: 30px;
 }
 
 #west {
-    position: absolute;
-    top: 300px;
+    position: relative;
+    bottom: 260px;
+    right: 70px;
 }
 
 #county {
     text-align: center;
 }
+#nav p {
+    text-align: center;
+    position: relative;
+    bottom: 270px;
+}
 
 #zoomOut {
-    position: absolute;
-    top: 85px;
-    left: 100px;
+    position: relative;
+    bottom: 260px;
+    left: 110px;
     z-index: 2;
     background-color: white;
 }

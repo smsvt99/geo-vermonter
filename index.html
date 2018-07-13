@@ -23,21 +23,6 @@
 
 <body>
     <h1>Geo-Vermonter</h1>
-    <nav id="nav">
-        <button id="north" onclick="north()">
-            <i class="fas fa-chevron-circle-up"></i>
-            <br>North</button>
-        <button id="west" onclick="west()">
-            <i class="fas fa-chevron-circle-left"></i> West</button>
-        <button id="east" onclick="east()">East
-            <i class="fas fa-chevron-circle-right"></i>
-        </button>
-        <button id="south" onclick="south()">South
-            <br>
-            <i class="fas fa-chevron-circle-down"></i>
-        </button>
-        <button id="zoomOut" onclick="zoomOut()">Zoom Out</button>
-    </nav>
     <div id="mapWrapper">
         <div id="map"></div>
     </div>
@@ -52,7 +37,23 @@
         <button id="guess" onclick="guess()">Guess the Spot</button>
         <button id="quit" onclick="quit()">I Give Up!</button>
     </div>
-    <div id="alert"></div>
+    <nav id="nav">
+        <p>Controls</p>
+            <button id="north" onclick="north()">
+                <i class="fas fa-chevron-circle-up"></i>
+                <br>North</button>
+            <button id="west" onclick="west()">
+                <i class="fas fa-chevron-circle-left"></i> West</button>
+            <button id="east" onclick="east()">East
+                <i class="fas fa-chevron-circle-right"></i>
+            </button>
+            <button id="south" onclick="south()">South
+                <br>
+                <i class="fas fa-chevron-circle-down"></i>
+            </button>
+            <button id="zoomOut" onclick="zoomOut()">Zoom Out</button>
+        </nav>
+        <div id="alert"></div>
 </body>
 <script>
     let randomLat;
