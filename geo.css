@@ -1,0 +1,175 @@
+span {
+    font-size: 23px;
+}
+
+h1 {
+    position: absolute;
+    top: 5px;
+    left: 500px;
+    color: forestgreen;
+}
+
+#countyDropdown button {
+    margin: 1px;
+    padding: 1px;
+    background-color: forestgreen;
+    margin-right: 30px;
+    color: white;
+}
+
+#countyInput {
+    margin-right: 30px;
+    text-align: center;
+}
+
+.dropDownItems {
+    border: 1px black solid;
+    width: 200px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.dropDownItems:hover {
+    background-color: lightblue;
+    color: white;
+    text-decoration: none;
+}
+
+#nav button:disabled {
+    color: grey;
+    background-color: black;
+}
+
+#controls button:disabled {
+    color: grey;
+    background-color: black;
+}
+
+body {
+    background-color: lightgreen;
+}
+
+#countyGuessButton:disabled {
+    color: grey;
+    background-color: black;
+}
+
+#countyCancelButton:disabled {
+    color: grey;
+    background-color: black;
+}
+
+#start {
+    background-color: green;
+}
+
+#guess {
+    background-color: blue;
+}
+
+#quit {
+    background-color: orangered;
+}
+
+body {
+    font-size: 20px;
+}
+
+#controls button {
+    width: 120px;
+    font-size: 20px;
+    color: white;
+}
+
+#controls {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    height: 100px;
+    top: 300px;
+    left: 155px;
+}
+
+#infoWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    border: solid black 2px;
+    width: 300px;
+    padding: 25px;
+    position: relative;
+    top: 75px;
+}
+
+#nav button {
+    height: 50px;
+    width: 75px;
+    font-size: 14px;
+    background-color: forestgreen;
+    color: white;
+}
+
+#map {
+    height: 500px;
+    width: 600px;
+    float: left;
+    z-index: 0;
+    margin-left: 85px;
+    margin-top: 75px;
+}
+
+#countyDropdown {
+    display: none;
+}
+
+#alert {
+    display: none;
+    background-color: orangered;
+    position: relative;
+    top: 135px;
+    right: 250px;
+    z-index: 1;
+    padding: 10px;
+    color: white;
+    border: solid 2px black;
+}
+
+#score {
+    text-align: center;
+}
+
+#north {
+    position: absolute;
+    left: 350px;
+    top: 30px;
+}
+
+#south {
+    position: absolute;
+    left: 350px;
+    top: 585px;
+}
+
+#east {
+    position: absolute;
+    top: 300px;
+    left: 700px;
+}
+
+#west {
+    position: absolute;
+    top: 300px;
+}
+
+#county {
+    text-align: center;
+}
+
+#zoomOut {
+    position: absolute;
+    top: 85px;
+    left: 100px;
+    z-index: 2;
+    background-color: white;
+}
