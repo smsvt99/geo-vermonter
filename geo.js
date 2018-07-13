@@ -10,6 +10,7 @@ function startGame() {
     zoomLevel = 18;
     score = 20;
     guessNumber = 0
+    zoomNumber = 0
     randomCoords();
     createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
     document.getElementById("longitude").textContent = "Longitude: ?"
