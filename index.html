@@ -21,12 +21,14 @@
     span {
         font-size: 23px;
     }
+
     h1 {
         position: absolute;
         top: 5px;
         left: 500px;
         color: forestgreen;
     }
+
     #countyDropdown button {
         margin: 1px;
         padding: 1px;
@@ -34,57 +36,71 @@
         margin-right: 30px;
         color: white;
     }
+
     #countyInput {
         margin-right: 30px;
         text-align: center;
     }
+
     .dropDownItems {
         border: 1px black solid;
         width: 200px;
         padding: 5px;
         margin: 5px;
     }
+
     .dropDownItems:hover {
         background-color: lightblue;
         color: white;
         text-decoration: none;
     }
+
     #nav button:disabled {
         color: grey;
         background-color: black;
     }
+
     #controls button:disabled {
         color: grey;
         background-color: black;
     }
+
     body {
         background-color: lightblue
     }
+
     #countyGuessButton:disabled {
         color: grey;
         background-color: black;
     }
+
     #countyCancelButton:disabled {
         color: grey;
         background-color: black;
     }
+
     #start {
         background-color: green;
     }
+
     #guess {
         background-color: blue;
     }
+
     #quit {
         background-color: orangered;
     }
+
     body {
         font-size: 20px;
     }
+
     #controls button {
         width: 120px;
         font-size: 20px;
         color: white;
     }
+
     #controls {
         display: flex;
         flex-direction: row;
@@ -93,6 +109,7 @@
         top: 300px;
         left: 155px;
     }
+
     #infoWrapper {
         display: flex;
         flex-direction: column;
@@ -104,6 +121,7 @@
         position: relative;
         top: 75px;
     }
+
     #nav button {
         height: 50px;
         width: 75px;
@@ -111,6 +129,7 @@
         background-color: forestgreen;
         color: white;
     }
+
     #map {
         height: 500px;
         width: 600px;
@@ -119,9 +138,11 @@
         margin-left: 85px;
         margin-top: 75px;
     }
+
     #countyDropdown {
         display: none;
     }
+
     #alert {
         display: none;
         background-color: orangered;
@@ -133,31 +154,38 @@
         color: white;
         border: solid 2px black;
     }
+
     #score {
         text-align: center;
     }
+
     #north {
         position: absolute;
         left: 350px;
         top: 30px;
     }
+
     #south {
         position: absolute;
         left: 350px;
         top: 585px;
     }
+
     #east {
         position: absolute;
         top: 300px;
         left: 700px;
     }
+
     #west {
         position: absolute;
         top: 300px;
     }
+
     #county {
         text-align: center;
     }
+
     #zoomOut {
         position: absolute;
         top: 85px;
@@ -214,6 +242,7 @@
     let score;
     let newLat;
     let newLong
+    let guessNumber = 0
     let scoreDiv = document.getElementById("score")
     let countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", " Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
     document.getElementById("guess").disabled = true;
@@ -234,6 +263,7 @@
             maxZoom: zoomLevel,
             minZoom: zoomLevel,
         }).addTo(map);
+
     map.dragging.disable();
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
@@ -263,6 +293,7 @@
                 maxZoom: zoomLevel,
                 minZoom: zoomLevel,
             }).addTo(map);
+        let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
         map.dragging.disable();
         map.touchZoom.disable();
         map.doubleClickZoom.disable();
@@ -292,6 +323,7 @@
         }
     }
     function startGame() {
+        guessNumber=0
         document.getElementById("north").disabled = false;
         document.getElementById("south").disabled = false;
         document.getElementById("east").disabled = false;
@@ -312,6 +344,7 @@
                 maxZoom: zoomLevel,
                 minZoom: 17,
             }).addTo(map);
+        let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
         map.dragging.disable();
         map.touchZoom.disable();
         map.doubleClickZoom.disable();
@@ -398,12 +431,13 @@
                     if (score === 0) {
                         checkScore()
                     } else {
+                        guessNumber++
                         scoreDiv = document.getElementById("score")
                         scoreDiv.remove()
                         document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
                         wrongGuessAlert = document.getElementById("alert")
                         wrongGuessAlert.style = "display: inline-block;"
-                        wrongGuessAlert.innerHTML = "Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Guess Again</button>"
+                        wrongGuessAlert.innerHTML = "Guess "+guessNumber+": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Guess Again</button>"
                     }
                 }
             })
@@ -417,11 +451,12 @@
         countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
         countyDropdown.innerHTML += "<span>What County are we in?</span>"
         for (i = 0; i < countyArray.length; i++) {
-            countyDropdown.innerHTML += `<a class='dropDownItems' href='#countyInput' onclick='fillCounty("${countyArray[i]}")'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
+            countyDropdown.innerHTML += `<a class='dropDownItems' href='#countyInput' onclick='fillCounty("${countyArray[i]}"); countyGuess();'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
+            // onclick='fillCounty("${countyArray[i]}
         }
-        countyDropdown.innerHTML += "<input id='countyInput' readonly />"
-        countyDropdown.innerHTML += "<button id='countyGuessButton' onclick='countyGuess()'>Guess</button>"
-        countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Cancel</button>"
+        countyDropdown.innerHTML += "<input style='display:none;' id='countyInput' readonly />"
+        //     countyDropdown.innerHTML += "<button id='countyGuessButton' onclick='countyGuess()'>Guess</button>"
+        //     countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Cancel</button>"
     }
     function north() {
         document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
@@ -437,6 +472,7 @@
                 maxZoom: zoomLevel,
                 minZoom: 1,
             }).addTo(map);
+        let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
         map.dragging.disable();
         map.touchZoom.disable();
         map.doubleClickZoom.disable();
@@ -467,6 +503,7 @@
                 maxZoom: zoomLevel,
                 minZoom: 1,
             }).addTo(map);
+        let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
         map.dragging.disable();
         map.touchZoom.disable();
         map.doubleClickZoom.disable();
@@ -497,6 +534,7 @@
                 maxZoom: zoomLevel,
                 minZoom: 1,
             }).addTo(map);
+        let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
         map.dragging.disable();
         map.touchZoom.disable();
         map.doubleClickZoom.disable();
@@ -527,6 +565,7 @@
                 maxZoom: zoomLevel,
                 minZoom: 1,
             }).addTo(map);
+        let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
         map.dragging.disable();
         map.touchZoom.disable();
         map.doubleClickZoom.disable();
