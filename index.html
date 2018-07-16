@@ -23,15 +23,18 @@
 </head>
 
 <body>
+    <div id="leaderboard-div">
+        <button id="leaderboard-button" onclick="showLeaderboard()">High Scores</button>
+    </div>
     <h1>Geo-Vermonter</h1>
     <div id="mapWrapper">
         <div id="map"></div>
     </div>
     <div id="infoWrapper">
-        <div id="highscore">Highscore: ..</div>
+        <div id="highscore">Highest Score: ..</div>
         <div id="latitude">Latitude: ?</div>
         <div id="longitude">Longitude: ?</div>
-        <div id="county">County: ?</div>
+        <div id="county"><span id="countySpan">County: ?</span><div id='countyDropdown'></div></div>
         <div id="score">Score: ?</div>
     </div>
     <div id="controls">
@@ -68,9 +71,13 @@
     let newLong
     let guessNumber = 0
     let zoomNumber = 0
-    let highScores // = localStorage.getItem('highscore')
+    let highestScore // = localStorage.getItem('highscore')
 
-
+    if (localStorage.getItem('highscores')) {
+        highscoreDiv = document.getElementById("highscore")
+        let leaderboard = JSON.parse(localStorage.getItem('highscores'))
+        highscoreDiv.textContent = "Highest Score: " +leaderboard[0].score + " - " + leaderboard[0].name
+    }
 
     // if (!highScore) {
     //     highScore = localStorage.getItem('highscore')
@@ -115,6 +122,7 @@
     // ], { color: 'green', fillColor: 'white' }).addTo(map);
     let countyPolygon = L.geoJSON(county_data, { color: 'red' }).addTo(map)
     let borderPolygon = L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
+
 </script>
 
 </html>

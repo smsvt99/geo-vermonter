@@ -5,7 +5,7 @@ span {
 h1 {
     position: absolute;
     top: 0px;
-    left: 680px;
+    left: 860px;
     color: rgb(31, 126, 31);
 }
 
@@ -188,6 +188,9 @@ body {
 #county {
     text-align: center;
 }
+table, th, td {
+    border: 1px solid black;
+}
 #nav p {
     text-align: center;
     position: relative;
@@ -200,4 +203,70 @@ body {
     left: 110px;
     z-index: 2;
     background-color: white;
+}
+
+table {
+    margin:10px auto;
+    padding: 5px;
+
+}
+
+tr, td, th {
+    padding: 5px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgb(31, 126, 31);
+    color: white;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: blue;
+    color: white;
+}
+
+thead tr {
+    background-color: gold;
+    height: 2em;
+}
+
+td:first-child {
+    font-weight: bold;
+}
+td {
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+}
+
+#highscoreTable {
+    height: 450px;
+    overflow: auto;
+}
+#leaderboardButtonWrapper {
+    display:flex;
+    flex-direction: row;
+}
+
+#leaderboardButtonWrapper button {
+    width:150px;
+    height: 40px;
+    margin: 10px;
+    font-size: 20px;
+}
+#clearScores {
+    background-color: orangered !important;
+}
+#leaderboard-button {
+    margin: 1px;
+    padding: 1px;
+    background-color: blue;
+    color: white;
+    align-self:center;
+    width: 150px;
+    height: 30px;
+    font-size: 20px;
+    margin-left: 20px;
 }

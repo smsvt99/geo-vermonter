@@ -1,4 +1,5 @@
 function startGame() {
+    cancel()
     document.getElementById("north").disabled = false;
     document.getElementById("south").disabled = false;
     document.getElementById("east").disabled = false;
@@ -14,7 +15,7 @@ function startGame() {
     randomCoords();
     createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
     document.getElementById("longitude").textContent = "Longitude: ?"
-    document.getElementById("county").innerHTML = "County: ?<div id='countyDropdown'></div>"
+    document.getElementById("countySpan").textContent = "County: ?"
     document.getElementById("latitude").textContent = "Latitude: ?"
     updateScore()
     closeAlert()
@@ -31,6 +32,13 @@ function randomCoords() {
     if (!results.length) {
         randomCoords();
     }
+    fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (myJSON) {
+            realCounty = myJSON[0].display_name
+        })
 }
 function checkScore() {
     if (score === 0) {
@@ -66,12 +74,12 @@ function closeAlert() {
 function addDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
-    countyDropdown.innerHTML += "<span>What County are we in?</span>"
+    countyDropdown.innerHTML = "<span>What County are we in?</span>"
     for (i = 0; i < countyArray.length; i++) {
         countyDropdown.innerHTML += `<a class='dropDownItems' onclick='fillCounty("${countyArray[i]}"); countyGuess();'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
     }
     countyDropdown.innerHTML += "<input style='display:none;' id='countyInput' readonly />"
-    countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Cancel</button>"
+    countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button>"
 }
 function fillCounty(county) {
     document.getElementById("countyInput").value = county.toString();
@@ -87,7 +95,7 @@ function checkForCounty() {
             realCounty = myJSON[0].display_name
             for (let i = 0; i < countyArray.length; i++) {
                 if (realCounty.includes(countyArray[i])) {
-                    document.getElementById("county").innerHTML = "County: " + countyArray[i]
+                    document.getElementById("countySpan").innerHTML = "County: " + countyArray[i]
                 }
             }
         })
@@ -104,15 +112,16 @@ function countyGuess() {
             .then(function (myJSON) {
                 realCounty = myJSON[0].display_name
                 if (realCounty.includes(document.getElementById("countyInput").value)) { // if you win
-                    document.getElementById("county").innerHTML = "County: " + document.getElementById("countyInput").value + "<div id='countyDropdown'></div>"
-                    
+
+                    document.getElementById("countySpan").innerHTML = "County: " + document.getElementById("countyInput").value
+                    cancel()
                     rightGuessAlert = document.getElementById("alert")
-                    rightGuessAlert.style = "display: inline-block;"
+                    rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
                     rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
-                    
+
                     document.getElementById("latitude").textContent = "Latitude: " + randomLat;
                     document.getElementById("longitude").textContent = "Longitude: " + randomLong;
-                    
+
 
 
                     // if (highScore === undefined) {
@@ -152,9 +161,10 @@ function countyGuess() {
     }
 }
 function quit() {
+    cancel()
     document.getElementById("latitude").textContent = "Latitude: " + randomLat;
     document.getElementById("longitude").textContent = "Longitude: " + randomLong;
-    document.getElementById("county").textContent = "?"
+    document.getElementById("countySpan").textContent = "?"
 
     document.getElementById("guess").disabled = true;
     document.getElementById("quit").disabled = true;
@@ -243,28 +253,83 @@ function saveScore() {
 
     let userName = document.getElementById('initials').value
 
-    let scoreObject = {'name': userName, 'score': score.toString()}
+    let scoreObject = { 'name': userName, 'score': score.toString() }
 
 
     if (!localStorage.getItem('highscores')) {
         let scoresArray = []
         scoresArray.push(scoreObject)
         localStorage.setItem('highscores', JSON.stringify(scoresArray))
+
+        highscoreDiv = document.getElementById('highscore')
+        highscoreDiv.innerHTML = "Highest Score: " + scoreObject.score + " - " + scoreObject.name
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
 
+        console.log('leaderboard before adding scoreObject:', leaderboard);
+
         leaderboard.push(scoreObject)
-        let leaderboardScores = leaderboard.map(function(object) {
-            return object.score;
+
+        console.log('leaderboard:', leaderboard);
+
+        // let leaderboardScores = leaderboard.map(function(object) {
+        //     return Number(object.score);
+        // });
+
+        let sortedLeaderboard = leaderboard.sort(function (a, b) {
+            return Number(b.score) - Number(a.score);
         });
-        // [9, 19]
-        console.log(leaderboardScores)
 
-        console.log(leaderboard)
-        localStorage.setItem('highscores', JSON.stringify(leaderboard))
+        console.log('sortedLeaderboard:', sortedLeaderboard);
+
+        localStorage.setItem('highscores', JSON.stringify(sortedLeaderboard))
         console.log(localStorage)
+
+        highscoreDiv = document.getElementById('highscore')
+        highscoreDiv.innerHTML = "Highest Score: " + sortedLeaderboard[0].score + " - " + sortedLeaderboard[0].name
+
     }
+}
 
+function showLeaderboard() {
 
+    if (!localStorage.getItem('highscores')) {
 
+        countyDropdown = document.getElementById("countyDropdown")
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
+        countyDropdown.innerHTML = "There are no highscores"
+        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><br><button id='clearScores' onclick='clearHighscoresPopup()'>Clear all scores</button><div>"
+
+    } else {
+        let leaderboard = JSON.parse(localStorage.getItem('highscores'))
+
+        countyDropdown = document.getElementById("countyDropdown")
+
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
+        countyDropdown.innerHTML
+            = "<h2>High Scores</h2><div id='highscoreTable'><table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody></tbody></table></div>"
+        for (i = 0; i < leaderboard.length; i++) {
+            let tableBody = document.querySelector("#countyDropdown tbody")
+            tableBody.innerHTML
+                += "<tr><td>" + leaderboard[i].name + "</td><td>" + leaderboard[i].score + "</td></tr>";
+        }
+        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><br><button id='clearScores' onclick='clearHighscoresPopup()'>Clear all scores</button><div>"
+    }
+}
+function clearHighscoresPopup() {
+    let alert = document.getElementById("alert");
+    alert.innerHTML = "<h3>Are you sure you want to clear all the scores?</h3><br><button onclick='clearHighscores()'>Yes, OK</button><button onclick='closeAlert()'>No, cancel</button>"
+    alert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
+}
+
+function clearHighscores() {
+    localStorage.clear()
+    closeAlert()
+
+    countyDropdown = document.getElementById("countyDropdown")
+    countyDropdown.innerHTML = "There are no highscores"
+    countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button><button onclick='clearHighscoresPopup()'>Clear Highscores</button>"
+
+    highscoreDiv = document.getElementById('highscore')
+    highscoreDiv.innerHTML = "Highest Score: .."
 }
