@@ -2,13 +2,14 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
-        crossorigin="anonymous">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Geo-Vermonter</title>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
     <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
     <link rel="icon" type="image/png" href="pictures/flagMapVT.png">
     <link rel="stylesheet" href="geo.css" type="text/css">
@@ -23,7 +24,23 @@
 
 <body>
     <h1>Geo-Vermonter</h1>
+    <div id="mapWrapper">
+        <div id="map"></div>
+    </div>
+    <div id="infoWrapper">
+        <div id="highscore">Highscore: ..</div>
+        <div id="latitude">Latitude: ?</div>
+        <div id="longitude">Longitude: ?</div>
+        <div id="county">County: ?</div>
+        <div id="score">Score: ?</div>
+    </div>
+    <div id="controls">
+        <button id="start" onclick="startGame()">Start a Game</button>
+        <button id="guess" onclick="guess()">Guess the Spot</button>
+        <button id="quit" onclick="quit()">I Give Up!</button>
+    </div>
     <nav id="nav">
+        <p>Controls</p>
         <button id="north" onclick="north()">
             <i class="fas fa-chevron-circle-up"></i>
             <br>North</button>
@@ -38,20 +55,6 @@
         </button>
         <button id="zoomOut" onclick="zoomOut()">Zoom Out</button>
     </nav>
-    <div id="mapWrapper">
-        <div id="map"></div>
-    </div>
-    <div id="infoWrapper">
-        <div id="latitude">Latitude: ?</div>
-        <div id="longitude">Longitude: ?</div>
-        <div id="county">County: ?</div>
-        <div id="score">Score: ?</div>
-    </div>
-    <div id="controls">
-        <button id="start" onclick="startGame()">Start a Game</button>
-        <button id="guess" onclick="guess()">Guess the Spot</button>
-        <button id="quit" onclick="quit()">I Give Up!</button>
-    </div>
     <div id="alert"></div>
 </body>
 <script>
@@ -65,6 +68,14 @@
     let newLong
     let guessNumber = 0
     let zoomNumber = 0
+    let highScore = localStorage.getItem('highscore')
+
+    if (!isNaN(highScore)) {
+        localStorage.setItem('highscore', score);
+        document.getElementById("highscore").textContent = "Highscore: " + highScore
+    } else if (highScore==="undefined"){
+        document.getElementById("highscore").textContent = "Highscore: None set yet"
+    }
 
     document.getElementById("guess").disabled = true;
     document.getElementById("quit").disabled = true;
