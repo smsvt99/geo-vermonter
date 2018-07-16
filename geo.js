@@ -68,7 +68,7 @@ function addDropdown() {
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
     countyDropdown.innerHTML += "<span>What County are we in?</span>"
     for (i = 0; i < countyArray.length; i++) {
-        countyDropdown.innerHTML += `<a class='dropDownItems' href='#countyInput' onclick='fillCounty("${countyArray[i]}"); countyGuess();'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
+        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='fillCounty("${countyArray[i]}"); countyGuess();'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
     }
     countyDropdown.innerHTML += "<input style='display:none;' id='countyInput' readonly />"
     countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Cancel</button>"

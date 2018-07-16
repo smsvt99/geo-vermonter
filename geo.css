@@ -6,7 +6,7 @@ h1 {
     position: absolute;
     top: 0px;
     left: 680px;
-    color: forestgreen;
+    color: rgb(31, 126, 31);
 }
 
 button {
@@ -16,7 +16,7 @@ button {
 #countyDropdown button {
     margin: 1px;
     padding: 1px;
-    background-color: forestgreen;
+    background-color: rgb(31, 126, 31);
     margin-right: 30px;
     color: white;
     align-self:center;
@@ -37,9 +37,10 @@ button {
 }
 
 .dropDownItems:hover {
-    background-color: lightblue;
+    background-color: rgb(31, 126, 31);
     color: white;
     text-decoration: none;
+    cursor: pointer;
 }
 
 #nav button:disabled {
@@ -68,7 +69,7 @@ body {
 }
 
 #start {
-    background-color: green;
+    background-color: rgb(31, 126, 31);
 }
 
 #guess {
@@ -126,7 +127,7 @@ body {
     height: 50px;
     width: 75px;
     font-size: 14px;
-    background-color: forestgreen;
+    background-color: rgb(31, 126, 31);
     color: white;
 }
 
