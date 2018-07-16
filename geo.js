@@ -264,9 +264,10 @@ function saveScore() {
         highscoreDiv = document.getElementById('highscore')
         highscoreDiv.innerHTML = "Highest Score: " + scoreObject.score + " - " + scoreObject.name
     } else {
+        console.log("IM HERE")
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
-
-        console.log('leaderboard before adding scoreObject:', leaderboard);
+        console.log('leaderboard before adding scoreObject:');
+        console.log(leaderboard)
 
         leaderboard.push(scoreObject)
 
