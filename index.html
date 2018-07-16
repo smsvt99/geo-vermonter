@@ -68,14 +68,17 @@
     let newLong
     let guessNumber = 0
     let zoomNumber = 0
-    let highScore = localStorage.getItem('highscore')
+    let highScores // = localStorage.getItem('highscore')
 
-    if (!isNaN(highScore)) {
-        localStorage.setItem('highscore', score);
-        document.getElementById("highscore").textContent = "Highscore: " + highScore
-    } else if (highScore==="undefined"){
-        document.getElementById("highscore").textContent = "Highscore: None set yet"
-    }
+
+
+    // if (!highScore) {
+    //     highScore = localStorage.getItem('highscore')
+    //     localStorage.setItem('highscore', score);
+    //     document.getElementById("highscore").textContent = "Highscore: " + highScore
+    // } else {
+    //     document.getElementById("highscore").textContent = "Highscore: None set yet"
+    // }
 
     document.getElementById("guess").disabled = true;
     document.getElementById("quit").disabled = true;

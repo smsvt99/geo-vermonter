@@ -103,23 +103,27 @@ function countyGuess() {
             })
             .then(function (myJSON) {
                 realCounty = myJSON[0].display_name
-                if (realCounty.includes(document.getElementById("countyInput").value)) {
+                if (realCounty.includes(document.getElementById("countyInput").value)) { // if you win
                     document.getElementById("county").innerHTML = "County: " + document.getElementById("countyInput").value + "<div id='countyDropdown'></div>"
+                    
                     rightGuessAlert = document.getElementById("alert")
                     rightGuessAlert.style = "display: inline-block;"
-                    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
+                    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
+                    
                     document.getElementById("latitude").textContent = "Latitude: " + randomLat;
                     document.getElementById("longitude").textContent = "Longitude: " + randomLong;
-                    if (highScore === "undefined") {
-                        localStorage.setItem('highscore', score);
-                        highScore = localStorage.getItem('highscore')
-                    }
-                    if (score >= highScore) {
-                        localStorage.clear();
-                        localStorage.setItem('highscore', score);
-                        highScore = localStorage.getItem('highscore')
-                        document.getElementById("highscore").textContent = "Highscore: " + highScore
-                    }
+                    
+
+
+                    // if (highScore === undefined) {
+                    //     localStorage.setItem('highscore', score);
+                    //     highScore = localStorage.getItem('highscore')
+                    // }
+                    // if (score >= highScore) {
+                    //     localStorage.setItem('highscore', score);
+                    //     highScore = localStorage.getItem('highscore')
+                    //     document.getElementById("highscore").textContent = "Highscore: " + highScore
+                    // }
 
                     document.getElementById("start").disabled = false;
                     document.getElementById("guess").disabled = true;
@@ -234,4 +238,33 @@ function createMap(lat, long, zoomL, originalLat, originalLong) {
     map.boxZoom.disable();
     map.keyboard.disable();
     markerID = L.marker([originalLat, originalLong]).addTo(map);
+}
+function saveScore() {
+
+    let userName = document.getElementById('initials').value
+
+    let scoreObject = {'name': userName, 'score': score.toString()}
+
+
+    if (!localStorage.getItem('highscores')) {
+        let scoresArray = []
+        scoresArray.push(scoreObject)
+        localStorage.setItem('highscores', JSON.stringify(scoresArray))
+    } else {
+        let leaderboard = JSON.parse(localStorage.getItem('highscores'))
+
+        leaderboard.push(scoreObject)
+        let leaderboardScores = leaderboard.map(function(object) {
+            return object.score;
+        });
+        // [9, 19]
+        console.log(leaderboardScores)
+
+        console.log(leaderboard)
+        localStorage.setItem('highscores', JSON.stringify(leaderboard))
+        console.log(localStorage)
+    }
+
+
+
 }
