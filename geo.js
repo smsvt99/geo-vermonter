@@ -47,7 +47,7 @@ function checkScore() {
         cancel()
         document.getElementById("latitude").textContent = "Latitude: " + randomLat;
         document.getElementById("longitude").textContent = "Longitude: " + randomLong;
-        checkForCounty()
+        checkCountyOnQuit()
         checkAlert = document.getElementById("alert")
         checkAlert.style = "display: inline-block;"
         checkAlert.innerHTML = "You lose! <br> Your score has reached 0.<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
@@ -77,15 +77,11 @@ function addDropdown() {
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
     countyDropdown.innerHTML = "<span id='dropTitle'>What County are we in?</span>"
     for (i = 0; i < countyArray.length; i++) {
-        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='fillCounty("${countyArray[i]}"); countyGuess();'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
+        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='countyGuess("${countyArray[i]}");'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
     }
-    countyDropdown.innerHTML += "<input style='display:none;' id='countyInput' readonly />"
     countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button>"
 }
-function fillCounty(county) {
-    document.getElementById("countyInput").value = county.toString();
-}
-function checkForCounty() {
+function checkCountyOnQuit() {
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
     fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
         .then(function (response) {
@@ -100,52 +96,48 @@ function checkForCounty() {
             }
         })
 }
-function countyGuess() {
+function countyGuess(countyName) {
     checkScore()
-    if (document.getElementById("countyInput") === null || document.getElementById("countyInput") === "" || !document.getElementById("countyInput")) {
+    fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (myJSON) {
+            realCounty = myJSON[0].display_name
+            if (realCounty.includes(countyName)) { // if you win
 
-    } else {
-        fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (myJSON) {
-                realCounty = myJSON[0].display_name
-                if (realCounty.includes(document.getElementById("countyInput").value)) { // if you win
+                document.getElementById("countySpan").innerHTML = "County: " + countyName
+                cancel()
+                rightGuessAlert = document.getElementById("alert")
+                rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
+                rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
 
-                    document.getElementById("countySpan").innerHTML = "County: " + document.getElementById("countyInput").value
-                    cancel()
-                    rightGuessAlert = document.getElementById("alert")
-                    rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
-                    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
+                document.getElementById("latitude").textContent = "Latitude: " + randomLat;
+                document.getElementById("longitude").textContent = "Longitude: " + randomLong;
 
-                    document.getElementById("latitude").textContent = "Latitude: " + randomLat;
-                    document.getElementById("longitude").textContent = "Longitude: " + randomLong;
-
-                    document.getElementById("start").disabled = false;
-                    document.getElementById("guess").disabled = true;
-                    document.getElementById("quit").disabled = true;
-                    document.getElementById("north").disabled = true;
-                    document.getElementById("south").disabled = true;
-                    document.getElementById("east").disabled = true;
-                    document.getElementById("west").disabled = true;
-                    document.getElementById("zoomOut").disabled = true;
+                document.getElementById("start").disabled = false;
+                document.getElementById("guess").disabled = true;
+                document.getElementById("quit").disabled = true;
+                document.getElementById("north").disabled = true;
+                document.getElementById("south").disabled = true;
+                document.getElementById("east").disabled = true;
+                document.getElementById("west").disabled = true;
+                document.getElementById("zoomOut").disabled = true;
+            }
+            else {
+                score--
+                if (score === 0) {
+                    checkScore()
+                } else {
+                    guessNumber++
+                    updateScore()
+                    wrongGuessAlert = document.getElementById("alert")
+                    wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
+                    wrongGuessAlert.innerHTML = "Guess " + guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
                 }
-                else {
-                    score--
-                    if (score === 0) {
-                        checkScore()
-                    } else {
-                        guessNumber++
-                        updateScore()
-                        wrongGuessAlert = document.getElementById("alert")
-                        wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
-                        wrongGuessAlert.innerHTML = "Guess " + guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
-                    }
-                }
+            }
 
-            })
-    }
+        })
 }
 function quit() {
     cancel()
@@ -161,7 +153,7 @@ function quit() {
     document.getElementById("east").disabled = true;
     document.getElementById("west").disabled = true;
     document.getElementById("zoomOut").disabled = true;
-    checkForCounty();
+    checkCountyOnQuit();
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")

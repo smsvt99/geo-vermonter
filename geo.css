@@ -26,11 +26,6 @@ button {
     height: 25px;
 }
 
-#countyInput {
-    margin-right: 30px;
-    text-align: center;
-}
-
 .dropDownItems {
     border: 1px black solid;
     width: 200px;
