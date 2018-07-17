@@ -4,11 +4,35 @@ let theSpot;
 let mapCenter;
 
 let zoomLevel;
-let realCounty;
+let fullAddress;
 let score;
 let guessNumber = 0;
 let zoomNumber = 0;
 let highestScore;
+
+function changeGameState(newGameState) {
+    if (newGameState === "Playing game") {
+        document.getElementById("start").disabled = true;
+        document.getElementById("north").disabled = false;
+        document.getElementById("south").disabled = false;
+        document.getElementById("east").disabled = false;
+        document.getElementById("west").disabled = false;
+        document.getElementById("zoomOut").disabled = false;
+        document.getElementById("guess").disabled = false;
+        document.getElementById("quit").disabled = false;
+    } else if (newGameState === "Not playing game") {
+        document.getElementById("start").disabled = false;
+        document.getElementById("north").disabled = true;
+        document.getElementById("south").disabled = true;
+        document.getElementById("east").disabled = true;
+        document.getElementById("west").disabled = true;
+        document.getElementById("zoomOut").disabled = true;
+        document.getElementById("guess").disabled = true;
+        document.getElementById("quit").disabled = true;
+    } else {
+        console.error("Not a valid state.")
+    }
+}
 
 function initialize() {
     if (localStorage.getItem('highscores')) {
@@ -17,13 +41,7 @@ function initialize() {
         highscoreDiv.textContent = "Highest Score: " + leaderboard[0].score + " - " + leaderboard[0].name
     }
 
-    document.getElementById("guess").disabled = true;
-    document.getElementById("quit").disabled = true;
-    document.getElementById("zoomOut").disabled = true;
-    document.getElementById("north").disabled = true;
-    document.getElementById("south").disabled = true;
-    document.getElementById("east").disabled = true;
-    document.getElementById("west").disabled = true;
+    changeGameState("Not playing game")
 
     let map = L.map('map', { zoomControl: false }).setView([43.7886, -72.7317], 7);
     mapLink =
@@ -47,15 +65,8 @@ function initialize() {
     let borderPolygon = L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
 }
 function startGame() {
-    cancel()
-    document.getElementById("north").disabled = false;
-    document.getElementById("south").disabled = false;
-    document.getElementById("east").disabled = false;
-    document.getElementById("west").disabled = false;
-    document.getElementById("zoomOut").disabled = false;
-    document.getElementById("start").disabled = true;
-    document.getElementById("guess").disabled = false;
-    document.getElementById("quit").disabled = false;
+    closeDropdown()
+    changeGameState("Playing game")
     zoomLevel = 18;
     score = 20;
     guessNumber = 0
@@ -83,23 +94,12 @@ function randomCoords() {
 function checkScore() {
     if (score === 0) {
         updateScore()
-        cancel()
-        document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
-        document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
-        checkCountyOnQuit()
+        closeDropdown()
+        endGame()
         checkAlert = document.getElementById("alert")
         checkAlert.style = "display: inline-block;"
         checkAlert.innerHTML = "You lose! <br> Your score has reached 0.<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
-        document.getElementById("guess").disabled = true;
-        document.getElementById("quit").disabled = true;
-        document.getElementById("north").disabled = true;
-        document.getElementById("south").disabled = true;
-        document.getElementById("east").disabled = true;
-        document.getElementById("west").disabled = true;
-        document.getElementById("zoomOut").disabled = true;
-        document.getElementById("start").disabled = false;
-        // document.getElementById("countyGuessButton").disabled = true;
-        // document.getElementById("countyCancelButton").disabled = true;
+        changeGameState("Not playing game")
     }
 }
 function updateScore() {
@@ -114,105 +114,75 @@ function closeAlert() {
 function addDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
     countyDropdown.innerHTML = "<span id='dropTitle'>What County are we in?</span>"
-    for (i = 0; i < countiesInVermont.length; i++) {
-        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='countyGuess("${countiesInVermont[i]}");'><div id='${countiesInVermont[i]}'>${countiesInVermont[i]}</div></a>`
+    for (let county of countiesInVermont) {
+        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='guessCounty("${county}");'><div id='${county}'>${county}</div></a>`
     }
     countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button>"
 }
-function checkCountyOnQuit() {
-    fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (myJSON) {
-            realCounty = myJSON[0].display_name
-            for (let i = 0; i < countiesInVermont.length; i++) {
-                if (realCounty.includes(countiesInVermont[i])) {
-                    document.getElementById("countySpan").innerHTML = "County: " + countiesInVermont[i]
-                }
-            }
-        })
-}
-function checkCounty(fullAddress) {
-    // for (let i = 0; i < countyArray.length; i++) {
-    //     if (fullAddress.includes(countyArray[i])) {
-    //         return true
-    //     }
-    // }
-    // return false;
 
+function displayCounty(countyName) {
+    document.getElementById("countySpan").innerHTML = "County: " + countyName
+}
+function extractCounty(fullAddress) {
     for (let county of countiesInVermont) {
         if (fullAddress.includes(county)) {
-            return true
+            return county;
         }
     }
-    return false;
+    return null;
 }
-function countyGuess(countyName) {
+function correctGuess(countyName) {
+    // document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
+    // document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
+    // document.getElementById("countySpan").innerHTML = "County: " + countyName
+    endGame()
+    closeDropdown()
+    rightGuessAlert = document.getElementById("alert")
+    rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
+    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
+
+    changeGameState("Not playing game")
+}
+function wrongGuess() {
+    score--
+    if (score === 0) {
+        checkScore()
+    } else {
+        guessNumber++
+        updateScore()
+        wrongGuessAlert = document.getElementById("alert")
+        wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
+        wrongGuessAlert.innerHTML = "Guess " + guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
+    }
+}
+
+function guessCounty(countyGuessed) {
     checkScore()
-    fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (myJSON) {
-            realCounty = myJSON[0].display_name
-            if (realCounty.includes(countyName)) { // if you win
-
-                document.getElementById("countySpan").innerHTML = "County: " + countyName
-                cancel()
-                rightGuessAlert = document.getElementById("alert")
-                rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
-                rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
-
-                document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
-                document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
-
-                document.getElementById("start").disabled = false;
-                document.getElementById("guess").disabled = true;
-                document.getElementById("quit").disabled = true;
-                document.getElementById("north").disabled = true;
-                document.getElementById("south").disabled = true;
-                document.getElementById("east").disabled = true;
-                document.getElementById("west").disabled = true;
-                document.getElementById("zoomOut").disabled = true;
-            }
-            else {
-                score--
-                if (score === 0) {
-                    checkScore()
-                } else {
-                    guessNumber++
-                    updateScore()
-                    wrongGuessAlert = document.getElementById("alert")
-                    wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
-                    wrongGuessAlert.innerHTML = "Guess " + guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
-                }
-            }
-
-        })
+    function isCountyCorrect(county) {
+        if (county === countyGuessed) {
+            correctGuess(countyGuessed)
+        } else {
+            wrongGuess()
+        }
+    }
+    theSpot.fetchCounty(isCountyCorrect);
 }
-function quit() {
-    cancel()
+
+function endGame() {
+    closeDropdown()
     document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
     document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
     document.getElementById("countySpan").textContent = "?"
 
-    document.getElementById("guess").disabled = true;
-    document.getElementById("quit").disabled = true;
-    document.getElementById("start").disabled = false;
-    document.getElementById("north").disabled = true;
-    document.getElementById("south").disabled = true;
-    document.getElementById("east").disabled = true;
-    document.getElementById("west").disabled = true;
-    document.getElementById("zoomOut").disabled = true;
-    checkCountyOnQuit();
+    changeGameState("Not playing game")
+    theSpot.fetchCounty(displayCounty)
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")
     countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top:-10px; right:370px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
     addDropdown()
 }
-function cancel() {
+function closeDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
     countyDropdown.innerHTML = "";
     countyDropdown.style = "display:none;"
@@ -295,27 +265,18 @@ function saveScore() {
         highscoreDiv = document.getElementById('highscore')
         highscoreDiv.innerHTML = "Highest Score: " + scoreObject.score + " - " + scoreObject.name
     } else {
-        console.log("IM HERE")
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
-        console.log('leaderboard before adding scoreObject:');
-        console.log(leaderboard)
 
         leaderboard.push(scoreObject)
-
-        console.log('leaderboard:', leaderboard);
 
         let sortedLeaderboard = leaderboard.sort(function (a, b) {
             return Number(b.score) - Number(a.score);
         });
 
-        console.log('sortedLeaderboard:', sortedLeaderboard);
-
         localStorage.setItem('highscores', JSON.stringify(sortedLeaderboard))
-        console.log(localStorage)
 
         highscoreDiv = document.getElementById('highscore')
         highscoreDiv.innerHTML = "Highest Score: " + sortedLeaderboard[0].score + " - " + sortedLeaderboard[0].name
-
     }
 }
 
@@ -336,10 +297,10 @@ function showLeaderboard() {
         countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
         countyDropdown.innerHTML
             = "<h2>High Scores</h2><div id='highscoreTable'><table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody></tbody></table></div>"
-        for (i = 0; i < leaderboard.length; i++) {
+        for (let game of leaderboard) {
             let tableBody = document.querySelector("#countyDropdown tbody")
             tableBody.innerHTML
-                += "<tr><td>" + leaderboard[i].name + "</td><td>" + leaderboard[i].score + "</td></tr>";
+                += "<tr><td>" + game.name + "</td><td>" + game.score + "</td></tr>";
         }
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><br><button id='clearScores' onclick='clearHighscoresPopup()'>Clear all scores</button><div>"
     }
