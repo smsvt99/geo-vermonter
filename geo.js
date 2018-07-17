@@ -32,6 +32,7 @@ function randomCoords() {
     if (!results.length) {
         randomCoords();
     }
+    // early fetch for console cheat
     fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
         .then(function (response) {
             return response.json();
@@ -280,7 +281,7 @@ function showLeaderboard() {
 
         countyDropdown = document.getElementById("countyDropdown")
         countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
-        countyDropdown.innerHTML = "There are no highscores"
+        countyDropdown.innerHTML = "There are no high scores."
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><div>"
 
     } else {
@@ -310,7 +311,7 @@ function clearHighscores() {
     closeAlert()
 
     countyDropdown = document.getElementById("countyDropdown")
-    countyDropdown.innerHTML = "There are no highscores"
+    countyDropdown.innerHTML = "High scores cleared!"
     countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><div>"
 
     highscoreDiv = document.getElementById('highscore')
