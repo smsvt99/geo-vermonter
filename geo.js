@@ -320,7 +320,7 @@ function showLeaderboard() {
 function clearHighscoresPopup() {
     let alert = document.getElementById("alert");
     alert.innerHTML = "<h3>Are you sure you want to clear all the scores?</h3><br><button onclick='clearHighscores()'>Yes, OK</button><button onclick='closeAlert()'>No, cancel</button>"
-    alert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
+    alert.style = "display: inline-block; position: absolute; top: 300px; left:100px; width: 500px;"
 }
 
 function clearHighscores() {
