@@ -3,10 +3,11 @@ span {
 }
 
 h1 {
-    position: absolute;
-    top: 0px;
-    left: 860px;
     color: rgb(31, 126, 31);
+    position:absolute;
+    right: 200px;
+    z-index:1;
+    top:-20px;
 }
 
 button {
@@ -99,9 +100,11 @@ body {
     flex-direction: row;
     position: relative;
     height: 100px;
+    width: 350px;
     top: 120px;
-    left: 180px;
     z-index: 3;
+    margin:auto;
+
 }
 
 #infoWrapper {

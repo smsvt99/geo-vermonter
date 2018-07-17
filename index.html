@@ -23,10 +23,10 @@
 </head>
 
 <body>
+    <h1>Geo-Vermonter</h1>
     <div id="leaderboard-div">
         <button id="leaderboard-button" onclick="showLeaderboard()">High Scores</button>
     </div>
-    <h1>Geo-Vermonter</h1>
     <div id="mapWrapper">
         <div id="map"></div>
     </div>
@@ -34,7 +34,10 @@
         <div id="highscore">Highest Score: ..</div>
         <div id="latitude">Latitude: ?</div>
         <div id="longitude">Longitude: ?</div>
-        <div id="county"><span id="countySpan">County: ?</span><div id='countyDropdown'></div></div>
+        <div id="county">
+            <span id="countySpan">County: ?</span>
+            <div id='countyDropdown'></div>
+        </div>
         <div id="score">Score: ?</div>
     </div>
     <div id="controls">
@@ -76,7 +79,7 @@
     if (localStorage.getItem('highscores')) {
         highscoreDiv = document.getElementById("highscore")
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
-        highscoreDiv.textContent = "Highest Score: " +leaderboard[0].score + " - " + leaderboard[0].name
+        highscoreDiv.textContent = "Highest Score: " + leaderboard[0].score + " - " + leaderboard[0].name
     }
 
     // if (!highScore) {

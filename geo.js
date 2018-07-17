@@ -151,7 +151,7 @@ function countyGuess() {
                         guessNumber++
                         updateScore()
                         wrongGuessAlert = document.getElementById("alert")
-                        wrongGuessAlert.style = "display: inline-block;"
+                        wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
                         wrongGuessAlert.innerHTML = "Guess " + guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
                     }
                 }
