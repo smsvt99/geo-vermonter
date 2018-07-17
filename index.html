@@ -74,21 +74,13 @@
     let newLong
     let guessNumber = 0
     let zoomNumber = 0
-    let highestScore // = localStorage.getItem('highscore')
+    let highestScore
 
     if (localStorage.getItem('highscores')) {
         highscoreDiv = document.getElementById("highscore")
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
         highscoreDiv.textContent = "Highest Score: " + leaderboard[0].score + " - " + leaderboard[0].name
     }
-
-    // if (!highScore) {
-    //     highScore = localStorage.getItem('highscore')
-    //     localStorage.setItem('highscore', score);
-    //     document.getElementById("highscore").textContent = "Highscore: " + highScore
-    // } else {
-    //     document.getElementById("highscore").textContent = "Highscore: None set yet"
-    // }
 
     document.getElementById("guess").disabled = true;
     document.getElementById("quit").disabled = true;
@@ -115,14 +107,7 @@
     map.scrollWheelZoom.disable();
     map.boxZoom.disable();
     map.keyboard.disable();
-    // let coords = border_data.geometry.coordinates[0]
-    // let fixedCoords = coords.map((elem) => {
-    //     let newArray = [elem[1], elem[0]]
-    //     return newArray
-    // })
-    // let polygon = L.polygon([
-    //     fixedCoords
-    // ], { color: 'green', fillColor: 'white' }).addTo(map);
+
     let countyPolygon = L.geoJSON(county_data, { color: 'red' }).addTo(map)
     let borderPolygon = L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
 

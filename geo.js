@@ -74,7 +74,7 @@ function closeAlert() {
 function addDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
-    countyDropdown.innerHTML = "<span>What County are we in?</span>"
+    countyDropdown.innerHTML = "<span id='dropTitle'>What County are we in?</span>"
     for (i = 0; i < countyArray.length; i++) {
         countyDropdown.innerHTML += `<a class='dropDownItems' onclick='fillCounty("${countyArray[i]}"); countyGuess();'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
     }
@@ -86,7 +86,6 @@ function fillCounty(county) {
 }
 function checkForCounty() {
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
-    // countyArrayIndex = 0
     fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
         .then(function (response) {
             return response.json();
@@ -122,18 +121,6 @@ function countyGuess() {
                     document.getElementById("latitude").textContent = "Latitude: " + randomLat;
                     document.getElementById("longitude").textContent = "Longitude: " + randomLong;
 
-
-
-                    // if (highScore === undefined) {
-                    //     localStorage.setItem('highscore', score);
-                    //     highScore = localStorage.getItem('highscore')
-                    // }
-                    // if (score >= highScore) {
-                    //     localStorage.setItem('highscore', score);
-                    //     highScore = localStorage.getItem('highscore')
-                    //     document.getElementById("highscore").textContent = "Highscore: " + highScore
-                    // }
-
                     document.getElementById("start").disabled = false;
                     document.getElementById("guess").disabled = true;
                     document.getElementById("quit").disabled = true;
@@ -157,7 +144,6 @@ function countyGuess() {
                 }
 
             })
-        // console.log(localStorage.getItem('highscore'))
     }
 }
 function quit() {
@@ -272,10 +258,6 @@ function saveScore() {
         leaderboard.push(scoreObject)
 
         console.log('leaderboard:', leaderboard);
-
-        // let leaderboardScores = leaderboard.map(function(object) {
-        //     return Number(object.score);
-        // });
 
         let sortedLeaderboard = leaderboard.sort(function (a, b) {
             return Number(b.score) - Number(a.score);
