@@ -1,3 +1,58 @@
+class Point {
+    latLong() {
+        return [this.latitude, this.longitude].join(',');
+    }
+    longLat() {
+        return [this.longitude, this.latitude].join(',');
+    }
+}
+
+let theSpot = new Point();
+let mapCenter = new Point();
+
+let zoomLevel;
+let realCounty;
+let score;
+let guessNumber = 0;
+let zoomNumber = 0;
+let highestScore;
+
+function initialize() {
+    if (localStorage.getItem('highscores')) {
+        highscoreDiv = document.getElementById("highscore")
+        let leaderboard = JSON.parse(localStorage.getItem('highscores'))
+        highscoreDiv.textContent = "Highest Score: " + leaderboard[0].score + " - " + leaderboard[0].name
+    }
+
+    document.getElementById("guess").disabled = true;
+    document.getElementById("quit").disabled = true;
+    document.getElementById("zoomOut").disabled = true;
+    document.getElementById("north").disabled = true;
+    document.getElementById("south").disabled = true;
+    document.getElementById("east").disabled = true;
+    document.getElementById("west").disabled = true;
+
+    let map = L.map('map', { zoomControl: false }).setView([43.7886, -72.7317], 7);
+    mapLink =
+        '<a href="http://www.esri.com/">Esri</a>';
+    wholink =
+        'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+    L.tileLayer(
+        'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; ' + mapLink + ', ' + wholink,
+            maxZoom: 18,
+            minZoom: 1,
+        }).addTo(map);
+    map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
+
+    let countyPolygon = L.geoJSON(county_data, { color: 'red' }).addTo(map)
+    let borderPolygon = L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
+}
 function startGame() {
     cancel()
     document.getElementById("north").disabled = false;
@@ -13,7 +68,7 @@ function startGame() {
     guessNumber = 0
     zoomNumber = 0
     randomCoords();
-    createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
+    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
     document.getElementById("longitude").textContent = "Longitude: ?"
     document.getElementById("countySpan").textContent = "County: ?"
     document.getElementById("latitude").textContent = "Latitude: ?"
@@ -21,19 +76,17 @@ function startGame() {
     closeAlert()
 }
 function randomCoords() {
-    randomLat = Math.random() * (2.267) + 42.7395;
-    randomLong = Math.random() * (-1.8165) - 71.5489;
-    newLat = randomLat;
-    newLong = randomLong;
-    randomPair = randomLat + "," + randomLong
-    randomPairArray = [randomLat, randomLong]
+    theSpot.latitude = Math.random() * (2.267) + 42.7395;
+    theSpot.longitude = Math.random() * (-1.8165) - 71.5489;
+    mapCenter.latitude = theSpot.latitude;
+    mapCenter.longitude = theSpot.longitude;
     layer = L.geoJson(border_data);
-    results = leafletPip.pointInLayer([randomLong, randomLat], layer);
+    results = leafletPip.pointInLayer([theSpot.longitude, theSpot.latitude], layer);
     if (!results.length) {
         randomCoords();
     }
     // early fetch for console cheat
-    fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+    fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
         .then(function (response) {
             return response.json();
         })
@@ -45,8 +98,8 @@ function checkScore() {
     if (score === 0) {
         updateScore()
         cancel()
-        document.getElementById("latitude").textContent = "Latitude: " + randomLat;
-        document.getElementById("longitude").textContent = "Longitude: " + randomLong;
+        document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
+        document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
         checkCountyOnQuit()
         checkAlert = document.getElementById("alert")
         checkAlert.style = "display: inline-block;"
@@ -59,8 +112,8 @@ function checkScore() {
         document.getElementById("west").disabled = true;
         document.getElementById("zoomOut").disabled = true;
         document.getElementById("start").disabled = false;
-        document.getElementById("countyGuessButton").disabled = true;
-        document.getElementById("countyCancelButton").disabled = true;
+        // document.getElementById("countyGuessButton").disabled = true;
+        // document.getElementById("countyCancelButton").disabled = true;
     }
 }
 function updateScore() {
@@ -83,7 +136,7 @@ function addDropdown() {
 }
 function checkCountyOnQuit() {
     countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
-    fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+    fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
         .then(function (response) {
             return response.json();
         })
@@ -98,7 +151,7 @@ function checkCountyOnQuit() {
 }
 function countyGuess(countyName) {
     checkScore()
-    fetch("https://nominatim.openstreetmap.org/search.php?q=" + randomPair + "&format=json")
+    fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
         .then(function (response) {
             return response.json();
         })
@@ -112,8 +165,8 @@ function countyGuess(countyName) {
                 rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
                 rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
 
-                document.getElementById("latitude").textContent = "Latitude: " + randomLat;
-                document.getElementById("longitude").textContent = "Longitude: " + randomLong;
+                document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
+                document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
 
                 document.getElementById("start").disabled = false;
                 document.getElementById("guess").disabled = true;
@@ -141,8 +194,8 @@ function countyGuess(countyName) {
 }
 function quit() {
     cancel()
-    document.getElementById("latitude").textContent = "Latitude: " + randomLat;
-    document.getElementById("longitude").textContent = "Longitude: " + randomLong;
+    document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
+    document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
     document.getElementById("countySpan").textContent = "?"
 
     document.getElementById("guess").disabled = true;
@@ -176,35 +229,35 @@ function zoomOut() {
     score--;
     checkScore();
     updateScore()
-    createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
+    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function north() {
     score--
     checkScore();
     updateScore()
-    newLat = newLat + .005;
-    createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
+    mapCenter.latitude = mapCenter.latitude + .005;
+    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function south() {
     score--
     checkScore();
     updateScore()
-    newLat = newLat - .005;
-    createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
+    mapCenter.latitude = mapCenter.latitude - .005;
+    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function east() {
     score--
     checkScore();
     updateScore()
-    newLong = newLong + .007;
-    createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
+    mapCenter.longitude = mapCenter.longitude + .007;
+    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function west() {
     score--
     checkScore();
     updateScore()
-    newLong = newLong - .007;
-    createMap(newLat, newLong, zoomLevel, randomLat, randomLong)
+    mapCenter.longitude = mapCenter.longitude - .007;
+    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function createMap(lat, long, zoomL, originalLat, originalLong) {
     document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
