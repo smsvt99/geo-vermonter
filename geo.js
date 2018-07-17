@@ -1,14 +1,5 @@
-class Point {
-    latLong() {
-        return [this.latitude, this.longitude].join(',');
-    }
-    longLat() {
-        return [this.longitude, this.latitude].join(',');
-    }
-}
-
-let theSpot = new Point();
-let mapCenter = new Point();
+let theSpot = new PointInVermont();
+let mapCenter = new PointInVermont();
 
 let zoomLevel;
 let realCounty;
@@ -76,10 +67,11 @@ function startGame() {
     closeAlert()
 }
 function randomCoords() {
-    theSpot.latitude = Math.random() * (2.267) + 42.7395;
-    theSpot.longitude = Math.random() * (-1.8165) - 71.5489;
-    mapCenter.latitude = theSpot.latitude;
-    mapCenter.longitude = theSpot.longitude;
+
+    theSpot = createRandomPoint();
+
+    mapCenter = new PointInVermont(theSpot.latitude, theSpot.longitude)
+
     layer = L.geoJson(border_data);
     results = leafletPip.pointInLayer([theSpot.longitude, theSpot.latitude], layer);
     if (!results.length) {
