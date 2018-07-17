@@ -4,11 +4,26 @@ let theSpot;
 let mapCenter;
 
 let zoomLevel;
-let fullAddress;
 let score;
-let guessNumber = 0;
-let zoomNumber = 0;
-let highestScore;
+
+let infoState = { guessNumber: 0, zoomNumber: 0, score: 20 }
+
+function updateInfoState(statesToChange) {
+    if (statesToChange.includes("Guess number")) {
+        infoState.guessNumber++
+    }
+    if (statesToChange.includes("Zoom number")) {
+        infoState.zoomNumber++
+    }
+    if (statesToChange.includes("Score")) {
+        infoState.score--
+    }
+    if (statesToChange.includes("Reset")) {
+        infoState.guessNumber = 0;
+        infoState.zoomNumber = 0;
+        infoState.score = 20;
+    }
+}
 
 function changeGameState(newGameState) {
     if (newGameState === "Playing game") {
@@ -30,7 +45,7 @@ function changeGameState(newGameState) {
         document.getElementById("guess").disabled = true;
         document.getElementById("quit").disabled = true;
     } else {
-        console.error("Not a valid state.")
+        console.error("Not a valid game state.")
     }
 }
 
@@ -68,9 +83,9 @@ function startGame() {
     closeDropdown()
     changeGameState("Playing game")
     zoomLevel = 18;
-    score = 20;
-    guessNumber = 0
-    zoomNumber = 0
+
+    updateInfoState("Reset")
+    
     randomCoords();
     createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
     document.getElementById("longitude").textContent = "Longitude: ?"
@@ -92,7 +107,7 @@ function randomCoords() {
     }
 }
 function checkScore() {
-    if (score === 0) {
+    if (infoState.score === 0) {
         updateScore()
         closeDropdown()
         endGame()
@@ -105,7 +120,7 @@ function checkScore() {
 function updateScore() {
     scoreDiv = document.getElementById("score")
     scoreDiv.remove()
-    document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + score + "</div>";
+    document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + infoState.score + "</div>";
 }
 function closeAlert() {
     wrongGuessAlert = document.getElementById("alert")
@@ -117,7 +132,7 @@ function addDropdown() {
     for (let county of countiesInVermont) {
         countyDropdown.innerHTML += `<a class='dropDownItems' onclick='guessCounty("${county}");'><div id='${county}'>${county}</div></a>`
     }
-    countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button>"
+    countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='closeDropdown()'>Close</button>"
 }
 
 function displayCounty(countyName) {
@@ -132,27 +147,24 @@ function extractCounty(fullAddress) {
     return null;
 }
 function correctGuess(countyName) {
-    // document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
-    // document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
-    // document.getElementById("countySpan").innerHTML = "County: " + countyName
     endGame()
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
     rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
-    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
+    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
 
     changeGameState("Not playing game")
 }
 function wrongGuess() {
-    score--
-    if (score === 0) {
+    updateInfoState("Score")
+    if (infoState.score === 0) {
         checkScore()
     } else {
-        guessNumber++
+        updateInfoState("Guess number")
         updateScore()
         wrongGuessAlert = document.getElementById("alert")
         wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
-        wrongGuessAlert.innerHTML = "Guess " + guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
+        wrongGuessAlert.innerHTML = "Guess " + infoState.guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
     }
 }
 
@@ -188,41 +200,40 @@ function closeDropdown() {
     countyDropdown.style = "display:none;"
 }
 function zoomOut() {
-    zoomNumber++
-    if (zoomNumber <= 2) {
+    updateInfoState(["Zoom number", "Score"])
+    if (infoState.zoomNumber <= 2) {
         zoomLevel--;
     } else {
         zoomLevel--;
         document.getElementById("zoomOut").disabled = true;
     }
-    score--;
     checkScore();
     updateScore()
     createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function north() {
-    score--
+    updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.latitude = mapCenter.latitude + .005;
     createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function south() {
-    score--
+    updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.latitude = mapCenter.latitude - .005;
     createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function east() {
-    score--
+    updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.longitude = mapCenter.longitude + .007;
     createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function west() {
-    score--
+    updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.longitude = mapCenter.longitude - .007;
@@ -287,7 +298,7 @@ function showLeaderboard() {
         countyDropdown = document.getElementById("countyDropdown")
         countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
         countyDropdown.innerHTML = "There are no high scores."
-        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><div>"
+        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
@@ -302,7 +313,7 @@ function showLeaderboard() {
             tableBody.innerHTML
                 += "<tr><td>" + game.name + "</td><td>" + game.score + "</td></tr>";
         }
-        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><br><button id='clearScores' onclick='clearHighscoresPopup()'>Clear all scores</button><div>"
+        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><br><button id='clearScores' onclick='clearHighscoresPopup()'>Clear all scores</button><div>"
     }
 }
 function clearHighscoresPopup() {
@@ -317,7 +328,7 @@ function clearHighscores() {
 
     countyDropdown = document.getElementById("countyDropdown")
     countyDropdown.innerHTML = "High scores cleared!"
-    countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><div>"
+    countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
     highscoreDiv = document.getElementById('highscore')
     highscoreDiv.innerHTML = "Highest Score: .."
