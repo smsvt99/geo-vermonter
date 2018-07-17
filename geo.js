@@ -265,7 +265,7 @@ function saveScore() {
 
     let userName = document.getElementById('initials').value
 
-    let scoreObject = { 'name': userName, 'score': score.toString() }
+    let scoreObject = { 'name': userName, 'score': infoState.score.toString() }
 
 
     if (!localStorage.getItem('highscores')) {
