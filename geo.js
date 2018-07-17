@@ -281,7 +281,7 @@ function showLeaderboard() {
         countyDropdown = document.getElementById("countyDropdown")
         countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
         countyDropdown.innerHTML = "There are no highscores"
-        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><br><button id='clearScores' onclick='clearHighscoresPopup()'>Clear all scores</button><div>"
+        countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><div>"
 
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
@@ -311,7 +311,7 @@ function clearHighscores() {
 
     countyDropdown = document.getElementById("countyDropdown")
     countyDropdown.innerHTML = "There are no highscores"
-    countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button><button onclick='clearHighscoresPopup()'>Clear Highscores</button>"
+    countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='cancel()'>Close</button><div>"
 
     highscoreDiv = document.getElementById('highscore')
     highscoreDiv.innerHTML = "Highest Score: .."
