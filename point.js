@@ -15,4 +15,20 @@ class PointInVermont {
     longLat() {
         return [this.longitude, this.latitude].join(',');
     }
+    fetchCounty() {
+        fetch("https://nominatim.openstreetmap.org/search.php?q=" + this.latLong() + "&format=json")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log({data})
+                this.fullAddress = data[0].display_name
+                console.log("got county: "+this.fullAddress)
+                if (checkCounty(this.fullAddress)) {
+                    console.log("We are in a Vermont county!")
+                } else {
+                    console.log("Not a Vermont county")
+                }
+            })
+    }
 }

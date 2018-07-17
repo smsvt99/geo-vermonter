@@ -1,5 +1,7 @@
-let theSpot = new PointInVermont();
-let mapCenter = new PointInVermont();
+const countiesInVermont = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
+
+let theSpot;
+let mapCenter;
 
 let zoomLevel;
 let realCounty;
@@ -77,14 +79,6 @@ function randomCoords() {
     if (!results.length) {
         randomCoords();
     }
-    // early fetch for console cheat
-    fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (myJSON) {
-            realCounty = myJSON[0].display_name
-        })
 }
 function checkScore() {
     if (score === 0) {
@@ -119,27 +113,40 @@ function closeAlert() {
 }
 function addDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
-    countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
     countyDropdown.innerHTML = "<span id='dropTitle'>What County are we in?</span>"
-    for (i = 0; i < countyArray.length; i++) {
-        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='countyGuess("${countyArray[i]}");'><div id='${countyArray[i]}'>${countyArray[i]}</div></a>`
+    for (i = 0; i < countiesInVermont.length; i++) {
+        countyDropdown.innerHTML += `<a class='dropDownItems' onclick='countyGuess("${countiesInVermont[i]}");'><div id='${countiesInVermont[i]}'>${countiesInVermont[i]}</div></a>`
     }
     countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='cancel()'>Close</button>"
 }
 function checkCountyOnQuit() {
-    countyArray = ["Addison County", "Bennington County", "Caledonia County", "Chittenden County", "Essex County", "Franklin County", "Grand Isle County", "Lamoille County", "Orange County", "Orleans County", "Rutland County", "Washington County", "Windham County", "Windsor County"]
     fetch("https://nominatim.openstreetmap.org/search.php?q=" + theSpot.latLong() + "&format=json")
         .then(function (response) {
             return response.json();
         })
         .then(function (myJSON) {
             realCounty = myJSON[0].display_name
-            for (let i = 0; i < countyArray.length; i++) {
-                if (realCounty.includes(countyArray[i])) {
-                    document.getElementById("countySpan").innerHTML = "County: " + countyArray[i]
+            for (let i = 0; i < countiesInVermont.length; i++) {
+                if (realCounty.includes(countiesInVermont[i])) {
+                    document.getElementById("countySpan").innerHTML = "County: " + countiesInVermont[i]
                 }
             }
         })
+}
+function checkCounty(fullAddress) {
+    // for (let i = 0; i < countyArray.length; i++) {
+    //     if (fullAddress.includes(countyArray[i])) {
+    //         return true
+    //     }
+    // }
+    // return false;
+
+    for (let county of countiesInVermont) {
+        if (fullAddress.includes(county)) {
+            return true
+        }
+    }
+    return false;
 }
 function countyGuess(countyName) {
     checkScore()
