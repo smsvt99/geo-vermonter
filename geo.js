@@ -150,7 +150,7 @@ function correctGuess(countyName) {
     endGame()
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
-    rightGuessAlert.style = "display: inline-block; position: relative; top: -300px; right: 290px;"
+    rightGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 100px; width: 350px;"
     rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
 
     changeGameState("Not playing game")
@@ -163,7 +163,7 @@ function wrongGuess() {
         updateInfoState("Guess number")
         updateScore()
         wrongGuessAlert = document.getElementById("alert")
-        wrongGuessAlert.style = "display: inline-block; position: relative; top: -20px;"
+        wrongGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 100px; width: 350px;"
         wrongGuessAlert.innerHTML = "Guess " + infoState.guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
     }
 }
@@ -191,7 +191,7 @@ function endGame() {
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")
-    countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top:-10px; right:370px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
+    countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top: 20px; right:370px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
     addDropdown()
 }
 function closeDropdown() {
