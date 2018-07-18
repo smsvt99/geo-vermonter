@@ -3,9 +3,7 @@ const countiesInVermont = ["Addison County", "Bennington County", "Caledonia Cou
 let theSpot;
 let mapCenter;
 
-let zoomLevel;
-
-let infoState = { guessNumber: 0, zoomNumber: 0, score: 20 }
+let infoState = { guessNumber: 0, zoomNumber: 0, score: 20, zoomLevel: 18 }
 
 function updateInfoState(statesToChange) {
     if (statesToChange.includes("Guess number")) {
@@ -21,6 +19,10 @@ function updateInfoState(statesToChange) {
         infoState.guessNumber = 0;
         infoState.zoomNumber = 0;
         infoState.score = 20;
+        infoState.zoomLevel = 18;
+    }
+    if (statesToChange.includes("Zoom level")) {
+        infoState.zoomLevel--
     }
 }
 
@@ -81,13 +83,13 @@ function initialize() {
 function startGame() {
     closeDropdown()
     changeGameState("Playing game")
-    zoomLevel = 18;
+    // zoomLevel = 18;
 
     updateInfoState("Reset")
 
     randomCoords();
     theSpot.fetchCounty()
-    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
+    createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
     document.getElementById("longitude").textContent = "Longitude: ?"
     document.getElementById("countySpan").textContent = "County: ?"
     document.getElementById("latitude").textContent = "Latitude: ?"
@@ -199,42 +201,42 @@ function closeDropdown() {
 function zoomOut() {
     updateInfoState(["Zoom number", "Score"])
     if (infoState.zoomNumber <= 2) {
-        zoomLevel--;
+        updateInfoState("Zoom level")
     } else {
-        zoomLevel--;
+        updateInfoState("Zoom level")
         document.getElementById("zoomOut").disabled = true;
     }
     checkScore();
     updateScore()
-    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
+    createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function north() {
     updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.latitude = mapCenter.latitude + .005;
-    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
+    createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function south() {
     updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.latitude = mapCenter.latitude - .005;
-    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
+    createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function east() {
     updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.longitude = mapCenter.longitude + .007;
-    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
+    createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function west() {
     updateInfoState("Score")
     checkScore();
     updateScore()
     mapCenter.longitude = mapCenter.longitude - .007;
-    createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
+    createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function createMap(lat, long, zoomL, originalLat, originalLong) {
     document.getElementById("mapWrapper").innerHTML = "<div id='map'></div>"
