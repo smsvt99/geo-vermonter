@@ -293,17 +293,16 @@ function saveScore() {
 
 function showLeaderboard() {
 
+    countyDropdown = document.getElementById("countyDropdown")
+    
     if (!localStorage.getItem('highscores')) {
 
-        countyDropdown = document.getElementById("countyDropdown")
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:10px; right:250px; background-color:white; width:auto;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
         countyDropdown.innerHTML = "There are no high scores."
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
-
-        countyDropdown = document.getElementById("countyDropdown")
 
         countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
         countyDropdown.innerHTML
