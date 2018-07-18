@@ -4,7 +4,6 @@ let theSpot;
 let mapCenter;
 
 let zoomLevel;
-let score;
 
 let infoState = { guessNumber: 0, zoomNumber: 0, score: 20 }
 
@@ -85,8 +84,9 @@ function startGame() {
     zoomLevel = 18;
 
     updateInfoState("Reset")
-    
+
     randomCoords();
+    theSpot.fetchCounty()
     createMap(mapCenter.latitude, mapCenter.longitude, zoomLevel, theSpot.latitude, theSpot.longitude)
     document.getElementById("longitude").textContent = "Longitude: ?"
     document.getElementById("countySpan").textContent = "County: ?"
@@ -170,14 +170,11 @@ function wrongGuess() {
 
 function guessCounty(countyGuessed) {
     checkScore()
-    function isCountyCorrect(county) {
-        if (county === countyGuessed) {
-            correctGuess(countyGuessed)
-        } else {
-            wrongGuess()
-        }
+    if (theSpot.county === countyGuessed) {
+        correctGuess(countyGuessed)
+    } else {
+        wrongGuess()
     }
-    theSpot.fetchCounty(isCountyCorrect);
 }
 
 function endGame() {
@@ -187,7 +184,7 @@ function endGame() {
     document.getElementById("countySpan").textContent = "?"
 
     changeGameState("Not playing game")
-    theSpot.fetchCounty(displayCounty)
+    displayCounty(theSpot.county)
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")
@@ -294,7 +291,7 @@ function saveScore() {
 function showLeaderboard() {
 
     countyDropdown = document.getElementById("countyDropdown")
-    
+
     if (!localStorage.getItem('highscores')) {
 
         countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
