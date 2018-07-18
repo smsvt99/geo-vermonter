@@ -150,7 +150,7 @@ function correctGuess(countyName) {
     endGame()
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
-    rightGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 100px; width: 350px;"
+    rightGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
     rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
 
     changeGameState("Not playing game")
@@ -163,7 +163,7 @@ function wrongGuess() {
         updateInfoState("Guess number")
         updateScore()
         wrongGuessAlert = document.getElementById("alert")
-        wrongGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 100px; width: 350px;"
+        wrongGuessAlert.style = "display: inline-block; position: absolute; top: 400px; left: 250px; width: 350px;"
         wrongGuessAlert.innerHTML = "Guess " + infoState.guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
     }
 }
@@ -191,7 +191,7 @@ function endGame() {
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")
-    countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top: 20px; right:370px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
+    countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top: 20px; left:250px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
     addDropdown()
 }
 function closeDropdown() {
@@ -296,7 +296,7 @@ function showLeaderboard() {
     if (!localStorage.getItem('highscores')) {
 
         countyDropdown = document.getElementById("countyDropdown")
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:10px; right:250px; background-color:white; width:auto;"
         countyDropdown.innerHTML = "There are no high scores."
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
@@ -305,7 +305,7 @@ function showLeaderboard() {
 
         countyDropdown = document.getElementById("countyDropdown")
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top:-100px; right:370px; background-color:white; width:auto;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
         countyDropdown.innerHTML
             = "<h2>High Scores</h2><div id='highscoreTable'><table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody></tbody></table></div>"
         for (let game of leaderboard) {
