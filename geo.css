@@ -275,8 +275,12 @@ td {
     font-size: 20px;
     margin-left: 20px;
 }
-
-
+.leaflet-interactive {
+    cursor: help !important;
+}
+.leaflet-container {
+    cursor: help !important;
+}
 
 @media (min-width: 1260px) {
 
@@ -557,5 +561,11 @@ td {
         height: 30px;
         font-size: 20px;
         margin-left: 20px;
+    }
+    .leaflet-interactive {
+        cursor: help !important;
+    }
+    .leaflet-container {
+        cursor: help !important;
     }
 }
