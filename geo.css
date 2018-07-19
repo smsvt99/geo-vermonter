@@ -283,100 +283,6 @@ td {
 }
 
 @media (min-width: 1260px) {
-
-    #dropTitle {
-        font-size: 23px;
-        color:blue;
-    }
-    
-    h1 {
-        color: rgb(31, 126, 31);
-        position:absolute;
-        right: 300px;
-        z-index:1;
-        top:-20px;
-    }
-    
-    button {
-        font-family: 'Dosis', sans-serif;
-    }
-    
-    #countyDropdown button {
-        margin: 1px;
-        padding: 1px;
-        background-color: rgb(31, 126, 31);
-        margin-right: 30px;
-        color: white;
-        align-self:center;
-        width: 215px;
-        height: 25px;
-    }
-    
-    .dropDownItems {
-        border: 1px black solid;
-        width: 200px;
-        padding: 5px;
-        margin: 5px;
-    }
-    
-    .dropDownItems:hover {
-        background-color: rgb(31, 126, 31);
-        color: white;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    
-    .dropDownItems:active {
-        background-color: orangered;
-    }
-    
-    #nav button:disabled {
-        color: grey;
-        background-color: black;
-    }
-    
-    #controls button:disabled {
-        color: grey;
-        background-color: black;
-    }
-    
-    body {
-        background-color: lightgreen;
-        font-family: 'Dosis', sans-serif;
-    }
-    
-    #countyGuessButton:disabled {
-        color: grey;
-        background-color: black;
-    }
-    
-    #countyCancelButton:disabled {
-        color: grey;
-        background-color: black;
-    }
-    
-    #start {
-        background-color: rgb(31, 126, 31);
-    }
-    
-    #guess {
-        background-color: blue;
-    }
-    
-    #quit {
-        background-color: orangered;
-    }
-    
-    body {
-        font-size: 20px;
-    }
-    
-    #controls button {
-        width: 120px;
-        font-size: 20px;
-        color: white;
-    }
-
     #infoWrapper {
         display: flex;
         flex-direction: column;
@@ -421,10 +327,6 @@ td {
         z-index: 0;
         margin-left: 20px;
         margin-top: 20px;
-    }
-    
-    #countyDropdown {
-        display: none;
     }
     
     #alert {
@@ -561,11 +463,5 @@ td {
         height: 30px;
         font-size: 20px;
         margin-left: 20px;
-    }
-    .leaflet-interactive {
-        cursor: help !important;
-    }
-    .leaflet-container {
-        cursor: help !important;
     }
 }
