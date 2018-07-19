@@ -15,8 +15,6 @@ button {
     font-family: 'Dosis', sans-serif;
 }
 
-
-
 #countyDropdown button {
     margin: 1px;
     padding: 1px;
@@ -100,8 +98,8 @@ body {
     width: 350px;
     z-index: 3;
     margin-left:100px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
 
 }
 
@@ -121,7 +119,7 @@ body {
     margin-left: 400px;
     background-color: rgba(255, 255, 255, 0.5);
     border: 2px solid black;
-    height:170px;
+    height:150px;
     width:280px;
 }
 
@@ -135,7 +133,7 @@ body {
 
 #map {
     height: 400px;
-    width: 100%;
+    width: 60%;
     z-index: 0;
     margin: auto;
     margin-top: 20px;
@@ -170,26 +168,26 @@ body {
 
 #north {
     position: relative;
-    top:-35px;
+    top:-50px;
     left:100px;
 }
 
 #south {
     position: relative;
-    top: -30px;
+    top: -40px;
     left: 100px;
 }
 
 #east {
     position: relative;
-    top: -5px;
-    left: 20px;
+    top: -25px;
+    left: 25px;
 }
 
 #west {
     position: relative;
-    top: -5px;
-    left: -60px;
+    top: -25px;
+    left: -65px;
 }
 
 #county {
@@ -206,8 +204,8 @@ table, th, td {
 
 #zoomOut {
     position:relative;
-    top: -10px;
-    left: 110px;
+    top: -30px;
+    left: 115px;
     z-index: 2;
     background-color: white;
 }
@@ -277,8 +275,12 @@ td {
     font-size: 20px;
     margin-left: 20px;
 }
-
-
+.leaflet-interactive {
+    cursor: help !important;
+}
+.leaflet-container {
+    cursor: help !important;
+}
 
 @media (min-width: 1260px) {
 
@@ -383,25 +385,20 @@ td {
         border: solid black 2px;
         width: 300px;
         padding: 25px;
-        /* position: relative; */
         background-color: rgba(255, 255, 255, 0.5);
     }
 
     #controls {
         display: flex;
         flex-direction: row;
-        /* position: relative; */
         height: 100px;
         width: 350px;
         z-index: 3;
         padding: 0 50px 20px 50px;
     
     }
-
     
     #nav {
-        /* position: relative;
-        top: 50px; */
         background-color: rgba(255, 255, 255, 0.5);
         border: 2px solid black;
         height:170px;
@@ -458,20 +455,20 @@ td {
     
     #north {
         position: relative;
-        top:-40px;
-        left:95px;
+        top:-35px;
+        left:100px;
     }
     
     #south {
         position: relative;
-        top: -30px;
-        left: 95px;
+        top: -20px;
+        left: 100px;
     }
     
     #east {
         position: relative;
         top: -10px;
-        left: 20px;
+        left: 30px;
     }
     
     #west {
@@ -494,8 +491,8 @@ td {
     
     #zoomOut {
         position: relative;
-        
-        left: 100px;
+        top: -10px;
+        left: 120px;
         z-index: 2;
         background-color: white;
     }
@@ -564,5 +561,11 @@ td {
         height: 30px;
         font-size: 20px;
         margin-left: 20px;
+    }
+    .leaflet-interactive {
+        cursor: help !important;
+    }
+    .leaflet-container {
+        cursor: help !important;
     }
 }

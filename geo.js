@@ -3,14 +3,11 @@ const countiesInVermont = ["Addison County", "Bennington County", "Caledonia Cou
 let theSpot;
 let mapCenter;
 
-let infoState = { guessNumber: 0, zoomNumber: 0, score: 20, zoomLevel: 18 }
+let infoState = { guessNumber: 0, score: 20, zoomLevel: 18 }
 
 function updateInfoState(statesToChange) {
     if (statesToChange.includes("Guess number")) {
         infoState.guessNumber++
-    }
-    if (statesToChange.includes("Zoom number")) {
-        infoState.zoomNumber++
     }
     if (statesToChange.includes("Score")) {
         infoState.score--
@@ -77,13 +74,14 @@ function initialize() {
     map.boxZoom.disable();
     map.keyboard.disable();
 
-    let countyPolygon = L.geoJSON(county_data, { color: 'red' }).addTo(map)
-    let borderPolygon = L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
+    // countyPolygon 
+    L.geoJSON(county_data, { color: 'red' }).addTo(map)
+    // borderPolygon 
+    L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
 }
 function startGame() {
     closeDropdown()
     changeGameState("Playing game")
-    // zoomLevel = 18;
 
     updateInfoState("Reset")
 
@@ -108,25 +106,20 @@ function randomCoords() {
         randomCoords();
     }
 }
-function checkScore() {
+function updateScore() {
     if (infoState.score === 0) {
-        updateScore()
         closeDropdown()
         endGame()
         checkAlert = document.getElementById("alert")
-        checkAlert.style = "display: inline-block;"
+        checkAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
         checkAlert.innerHTML = "You lose! <br> Your score has reached 0.<br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
         changeGameState("Not playing game")
     }
-}
-function updateScore() {
-    scoreDiv = document.getElementById("score")
-    scoreDiv.remove()
-    document.getElementById("infoWrapper").innerHTML += "<div id='score'>Score: " + infoState.score + "</div>";
+    document.getElementById("score").textContent = "Score: " + infoState.score;
 }
 function closeAlert() {
-    wrongGuessAlert = document.getElementById("alert")
-    wrongGuessAlert.style = "display: none;"
+    alert = document.getElementById("alert")
+    alert.style = "display: none;"
 }
 function addDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
@@ -138,7 +131,7 @@ function addDropdown() {
 }
 
 function displayCounty(countyName) {
-    document.getElementById("countySpan").innerHTML = "County: " + countyName
+    document.getElementById("countySpan").textContent = "County: " + countyName
 }
 function extractCounty(fullAddress) {
     for (let county of countiesInVermont) {
@@ -148,7 +141,7 @@ function extractCounty(fullAddress) {
     }
     return null;
 }
-function correctGuess(countyName) {
+function correctGuess() {
     endGame()
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
@@ -160,7 +153,7 @@ function correctGuess(countyName) {
 function wrongGuess() {
     updateInfoState("Score")
     if (infoState.score === 0) {
-        checkScore()
+        updateScore()
     } else {
         updateInfoState("Guess number")
         updateScore()
@@ -171,9 +164,9 @@ function wrongGuess() {
 }
 
 function guessCounty(countyGuessed) {
-    checkScore()
+    updateScore()
     if (theSpot.county === countyGuessed) {
-        correctGuess(countyGuessed)
+        correctGuess()
     } else {
         wrongGuess()
     }
@@ -183,10 +176,9 @@ function endGame() {
     closeDropdown()
     document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
     document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
-    document.getElementById("countySpan").textContent = "?"
+    displayCounty(theSpot.county)
 
     changeGameState("Not playing game")
-    displayCounty(theSpot.county)
 }
 function guess() {
     countyDropdown = document.getElementById("countyDropdown")
@@ -195,46 +187,37 @@ function guess() {
 }
 function closeDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
-    countyDropdown.innerHTML = "";
     countyDropdown.style = "display:none;"
 }
 function zoomOut() {
-    updateInfoState(["Zoom number", "Score"])
-    if (infoState.zoomNumber <= 2) {
-        updateInfoState("Zoom level")
-    } else {
-        updateInfoState("Zoom level")
+    updateInfoState(["Zoom level", "Score"])
+    if (infoState.zoomLevel === 15) {
         document.getElementById("zoomOut").disabled = true;
     }
-    checkScore();
-    updateScore()
+    updateScore();
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function north() {
     updateInfoState("Score")
-    checkScore();
-    updateScore()
+    updateScore();
     mapCenter.latitude = mapCenter.latitude + .005;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function south() {
     updateInfoState("Score")
-    checkScore();
-    updateScore()
+    updateScore();
     mapCenter.latitude = mapCenter.latitude - .005;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function east() {
     updateInfoState("Score")
-    checkScore();
-    updateScore()
+    updateScore();
     mapCenter.longitude = mapCenter.longitude + .007;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function west() {
     updateInfoState("Score")
-    checkScore();
-    updateScore()
+    updateScore();
     mapCenter.longitude = mapCenter.longitude - .007;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
@@ -251,7 +234,8 @@ function createMap(lat, long, zoomL, originalLat, originalLong) {
             maxZoom: 18,
             minZoom: 1,
         }).addTo(map);
-    let countyPolygon = L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
+    //  countyPolygon
+    L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
     map.dragging.disable();
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
@@ -273,7 +257,7 @@ function saveScore() {
         localStorage.setItem('highscores', JSON.stringify(scoresArray))
 
         highscoreDiv = document.getElementById('highscore')
-        highscoreDiv.innerHTML = "Highest Score: " + scoreObject.score + " - " + scoreObject.name
+        highscoreDiv.textContent = "Highest Score: " + scoreObject.score + " - " + scoreObject.name
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
 
@@ -286,7 +270,7 @@ function saveScore() {
         localStorage.setItem('highscores', JSON.stringify(sortedLeaderboard))
 
         highscoreDiv = document.getElementById('highscore')
-        highscoreDiv.innerHTML = "Highest Score: " + sortedLeaderboard[0].score + " - " + sortedLeaderboard[0].name
+        highscoreDiv.textContent = "Highest Score: " + sortedLeaderboard[0].score + " - " + sortedLeaderboard[0].name
     }
 }
 
