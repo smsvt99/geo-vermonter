@@ -11,6 +11,7 @@ function updateInfoState(statesToChange) {
     }
     if (statesToChange.includes("Score")) {
         infoState.score--
+        updateScore();
     }
     if (statesToChange.includes("Reset")) {
         infoState.guessNumber = 0;
@@ -146,35 +147,23 @@ function correctGuess() {
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
     rightGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
-    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials, must be 3 characters:</label><input id='initials' type='text' placeholder='- - -' /><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
+    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials, must be 3 characters:</label><input style='letter-spacing:5px;' id='initials' type='text' placeholder='---' /><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
 
     changeGameState("Not playing game")
 }
 function checkName() {
-    // regex = /\b\w{1,3}\b/g; //  closeAlert(); saveScore();
-    name = document.getElementById('initials').value
-    closeAlert();
+    let name = document.getElementById('initials').value
     if (name.length === 3) {
-        console.log("match")
+        closeAlert();
         saveScore();
-    } else {
-        console.log("no match")
-        newAlert = document.getElementById("alert")
-        newAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
-        newAlert.innerHTML = "<label for='highscores'>Please enter 3 characters:</label><input id='initials' type='text'/><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
     }
 }
 function wrongGuess() {
+    updateInfoState("Guess number")
+    wrongGuessAlert = document.getElementById("alert")
+    wrongGuessAlert.style = "display: inline-block; position: absolute; top: 400px; left: 250px; width: 350px;"
+    wrongGuessAlert.innerHTML = "Guess " + infoState.guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
     updateInfoState("Score")
-    if (infoState.score === 0) {
-        updateScore()
-    } else {
-        updateInfoState("Guess number")
-        updateScore()
-        wrongGuessAlert = document.getElementById("alert")
-        wrongGuessAlert.style = "display: inline-block; position: absolute; top: 400px; left: 250px; width: 350px;"
-        wrongGuessAlert.innerHTML = "Guess " + infoState.guessNumber + ": Wrong guess, guess again! <br><button onclick='closeAlert()' id='guessAgain'>Close</button>"
-    }
 }
 
 function guessCounty(countyGuessed) {
@@ -208,30 +197,25 @@ function zoomOut() {
     if (infoState.zoomLevel === 15) {
         document.getElementById("zoomOut").disabled = true;
     }
-    updateScore();
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function north() {
     updateInfoState("Score")
-    updateScore();
     mapCenter.latitude = mapCenter.latitude + .005;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function south() {
     updateInfoState("Score")
-    updateScore();
     mapCenter.latitude = mapCenter.latitude - .005;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function east() {
     updateInfoState("Score")
-    updateScore();
     mapCenter.longitude = mapCenter.longitude + .007;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
 function west() {
     updateInfoState("Score")
-    updateScore();
     mapCenter.longitude = mapCenter.longitude - .007;
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
 }
@@ -259,11 +243,8 @@ function createMap(lat, long, zoomL, originalLat, originalLong) {
     markerID = L.marker([originalLat, originalLong]).addTo(map);
 }
 function saveScore() {
-
     let userName = document.getElementById('initials').value
-
     let scoreObject = { 'name': userName, 'score': infoState.score.toString() }
-
 
     if (!localStorage.getItem('highscores')) {
         let scoresArray = []
@@ -294,14 +275,14 @@ function showLeaderboard() {
 
     if (!localStorage.getItem('highscores')) {
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:200px;"
         countyDropdown.innerHTML = "There are no high scores."
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:350px;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:300px;"
         countyDropdown.innerHTML
             = "<h2>High Scores</h2><div id='highscoreTable'><table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody></tbody></table></div>"
         for (let game of leaderboard) {
