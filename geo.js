@@ -275,14 +275,14 @@ function showLeaderboard() {
 
     if (!localStorage.getItem('highscores')) {
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:200px;"
         countyDropdown.innerHTML = "There are no high scores."
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:350px;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:300px;"
         countyDropdown.innerHTML
             = "<h2>High Scores</h2><div id='highscoreTable'><table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody></tbody></table></div>"
         for (let game of leaderboard) {
