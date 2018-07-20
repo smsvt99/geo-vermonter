@@ -3,7 +3,7 @@ var http = require('http');
 var mime = require('mime-types');
 
 var port = process.env.PORT || 5000;
-http.createServer(function (request, response) {
+http.createServer((request, response) => {
   let contentType = 'text/plain';
   let data;
   let path = request.url;

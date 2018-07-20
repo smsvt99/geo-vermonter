@@ -146,9 +146,23 @@ function correctGuess() {
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
     rightGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
-    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials.</label><input id='initials' type='text'/><br><button onclick='closeAlert(); saveScore();' id='guessAgain'>Submit</button>"
+    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials, must be 3 characters:</label><input id='initials' type='text' placeholder='- - -' /><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
 
     changeGameState("Not playing game")
+}
+function checkName() {
+    // regex = /\b\w{1,3}\b/g; //  closeAlert(); saveScore();
+    name = document.getElementById('initials').value
+    closeAlert();
+    if (name.length === 3) {
+        console.log("match")
+        saveScore();
+    } else {
+        console.log("no match")
+        newAlert = document.getElementById("alert")
+        newAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
+        newAlert.innerHTML = "<label for='highscores'>Please enter 3 characters:</label><input id='initials' type='text'/><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
+    }
 }
 function wrongGuess() {
     updateInfoState("Score")
@@ -287,7 +301,7 @@ function showLeaderboard() {
     } else {
         let leaderboard = JSON.parse(localStorage.getItem('highscores'))
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:auto;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:350px;"
         countyDropdown.innerHTML
             = "<h2>High Scores</h2><div id='highscoreTable'><table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody></tbody></table></div>"
         for (let game of leaderboard) {
