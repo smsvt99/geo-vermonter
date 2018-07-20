@@ -25,16 +25,7 @@ function updateInfoState(statesToChange) {
 }
 
 function changeGameState(newGameState) {
-    if (newGameState === "Playing game") {
-        document.getElementById("start").disabled = true;
-        document.getElementById("north").disabled = false;
-        document.getElementById("south").disabled = false;
-        document.getElementById("east").disabled = false;
-        document.getElementById("west").disabled = false;
-        document.getElementById("zoomOut").disabled = false;
-        document.getElementById("guess").disabled = false;
-        document.getElementById("quit").disabled = false;
-    } else if (newGameState === "Not playing game") {
+    if (newGameState === "Not playing game") {
         document.getElementById("start").disabled = false;
         document.getElementById("north").disabled = true;
         document.getElementById("south").disabled = true;
@@ -44,7 +35,14 @@ function changeGameState(newGameState) {
         document.getElementById("guess").disabled = true;
         document.getElementById("quit").disabled = true;
     } else {
-        console.error("Not a valid game state.")
+        document.getElementById("start").disabled = true;
+        document.getElementById("north").disabled = false;
+        document.getElementById("south").disabled = false;
+        document.getElementById("east").disabled = false;
+        document.getElementById("west").disabled = false;
+        document.getElementById("zoomOut").disabled = false;
+        document.getElementById("guess").disabled = false;
+        document.getElementById("quit").disabled = false;
     }
 }
 
@@ -79,30 +77,25 @@ function initialize() {
 }
 function startGame() {
     closeDropdown()
-    changeGameState("Playing game")
-
     updateInfoState("Reset")
-
+    changeGameState("Start")
     randomCoords();
-    theSpot.fetchCounty()
     createMap(mapCenter.latitude, mapCenter.longitude, infoState.zoomLevel, theSpot.latitude, theSpot.longitude)
+    document.getElementById("latitude").textContent = "Latitude: ?"
     document.getElementById("longitude").textContent = "Longitude: ?"
     document.getElementById("countySpan").textContent = "County: ?"
-    document.getElementById("latitude").textContent = "Latitude: ?"
     updateScore()
     closeAlert()
 }
 function randomCoords() {
-
     theSpot = createRandomPoint();
-
     mapCenter = new PointInVermont(theSpot.latitude, theSpot.longitude)
-
     layer = L.geoJson(border_data);
     results = leafletPip.pointInLayer([theSpot.longitude, theSpot.latitude], layer);
     if (!results.length) {
         randomCoords();
     }
+    theSpot.fetchCounty()
 }
 function updateScore() {
     if (infoState.score === 0) {
@@ -121,6 +114,7 @@ function closeAlert() {
 }
 function addDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
+    countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top: 20px; left:250px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
     countyDropdown.innerHTML = "<span id='dropTitle'>What County are we in?</span>"
     for (let county of countiesInVermont) {
         countyDropdown.innerHTML += `<a class='dropDownItems' onclick='guessCounty("${county}");'><div id='${county}'>${county}</div></a>`
@@ -128,8 +122,10 @@ function addDropdown() {
     countyDropdown.innerHTML += "<button id='countyCancelButton' onclick='closeDropdown()'>Close</button>"
 }
 
-function displayCounty(countyName) {
-    document.getElementById("countySpan").textContent = "County: " + countyName
+function displayInfo() {
+    document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
+    document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
+    document.getElementById("countySpan").textContent = "County: " + theSpot.county;
 }
 function extractCounty(fullAddress) {
     for (let county of countiesInVermont) {
@@ -174,16 +170,9 @@ function guessCounty(countyGuessed) {
 
 function endGame() {
     closeDropdown()
-    document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
-    document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
-    displayCounty(theSpot.county)
+    displayInfo()
     createMap(43.7886, -72.7317, 7, theSpot.latitude, theSpot.longitude)
     changeGameState("Not playing game")
-}
-function guess() {
-    countyDropdown = document.getElementById("countyDropdown")
-    countyDropdown.style = "border: 2px solid black; z-index:3; display: flex; flex-direction: column; position:absolute; top: 20px; left:250px; height: 380px; flex-wrap: wrap; background-color:white; width:450px;"
-    addDropdown()
 }
 function closeDropdown() {
     countyDropdown = document.getElementById("countyDropdown")
