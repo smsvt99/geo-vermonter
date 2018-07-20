@@ -74,11 +74,8 @@ function initialize() {
     map.scrollWheelZoom.disable();
     map.boxZoom.disable();
     map.keyboard.disable();
-
-    // countyPolygon 
-    L.geoJSON(county_data, { color: 'red' }).addTo(map)
-    // borderPolygon 
-    L.geoJSON(border_data, { color: 'green', fillColor: 'white' }).addTo(map)
+    L.geoJSON(county_data, { color: 'forestgreen', fillColor: 'white' }).addTo(map)
+    L.geoJSON(border_data, { color: 'forestgreen', weight: 4 }).addTo(map)
 }
 function startGame() {
     closeDropdown()
@@ -180,7 +177,7 @@ function endGame() {
     document.getElementById("latitude").textContent = "Latitude: " + theSpot.latitude;
     document.getElementById("longitude").textContent = "Longitude: " + theSpot.longitude;
     displayCounty(theSpot.county)
-
+    createMap(43.7886, -72.7317, 7, theSpot.latitude, theSpot.longitude)
     changeGameState("Not playing game")
 }
 function guess() {
@@ -232,8 +229,8 @@ function createMap(lat, long, zoomL, originalLat, originalLong) {
             maxZoom: 18,
             minZoom: 1,
         }).addTo(map);
-    //  countyPolygon
     L.geoJSON(county_data, { color: 'black', fillOpacity: '.01' }).addTo(map)
+    L.geoJSON(border_data, { color: 'forestgreen', weight: 5 }).addTo(map)
     map.dragging.disable();
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
