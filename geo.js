@@ -147,7 +147,7 @@ function correctGuess() {
     closeDropdown()
     rightGuessAlert = document.getElementById("alert")
     rightGuessAlert.style = "display: inline-block; position: absolute; top: 100px; left: 250px; width: 350px;"
-    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials, must be 3 characters:</label><input style='letter-spacing:5px;' id='initials' type='text' placeholder='---' /><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
+    rightGuessAlert.innerHTML = "Correct! You win! <br> You scored " + infoState.score + " points!<br><label for='highscores'>Enter your initials, must be 3 characters:</label><input style='text-transform: uppercase; letter-spacing:4px;' id='initials' type='text' placeholder='---' /><br><button onclick='checkName()' id='guessAgain'>Submit</button>"
 
     changeGameState("Not playing game")
 }
@@ -243,7 +243,7 @@ function createMap(lat, long, zoomL, originalLat, originalLong) {
     markerID = L.marker([originalLat, originalLong]).addTo(map);
 }
 function saveScore() {
-    let userName = document.getElementById('initials').value
+    let userName = (document.getElementById('initials').value).toUpperCase()
     let scoreObject = { 'name': userName, 'score': infoState.score.toString() }
 
     if (!localStorage.getItem('highscores')) {
@@ -275,7 +275,7 @@ function showLeaderboard() {
 
     if (!localStorage.getItem('highscores')) {
 
-        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width:200px;"
+        countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width: 200px;"
         countyDropdown.innerHTML = "There are no high scores."
         countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
@@ -304,6 +304,7 @@ function clearHighscores() {
     closeAlert()
 
     countyDropdown = document.getElementById("countyDropdown")
+    countyDropdown.style = "border: 2px solid black; z-index:3; display: block; position:absolute; top: 10px; left:250px; background-color:white; width: 200px;"
     countyDropdown.innerHTML = "High scores cleared!"
     countyDropdown.innerHTML += "<div id='leaderboardButtonWrapper'><button id='countyCancelButton' onclick='closeDropdown()'>Close</button><div>"
 
